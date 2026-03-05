@@ -1,0 +1,336 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Receta Óptica</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#f4f6f8;
+    padding:20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    background:white;
+    padding:25px;
+    border-radius:8px;
+    box-shadow:0 0 10px rgba(0,0,0,0.08);
+}
+
+h1{
+    margin-bottom:20px;
+    text-align:center;
+}
+
+.seccion{
+    margin-top:30px;
+}
+
+.seccion h2{
+    margin-bottom:10px;
+    border-bottom:2px solid #ddd;
+    padding-bottom:5px;
+}
+
+.tabla{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.tabla th,
+.tabla td{
+    padding:10px;
+    text-align:center;
+}
+
+.tabla th{
+    background:#f1f1f1;
+}
+
+.tabla td input{
+    width:100%;
+    padding:6px;
+    text-align:center;
+    border:1px solid #ccc;
+    border-radius:4px;
+}
+
+.label-ojo{
+    font-weight:bold;
+}
+
+/* ADD */
+
+.add-section{
+    margin-top:30px;
+}
+
+.add-section label{
+    font-weight:bold;
+    display:block;
+    margin-bottom:8px;
+}
+
+.add-section textarea{
+    width:100%;
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    resize:vertical;
+    min-height:80px;
+}
+
+/* BOTÓN */
+
+.boton-guardar{
+    margin-top:30px;
+    text-align:center;
+}
+
+.boton-guardar button{
+    padding:12px 25px;
+    border:none;
+    background:#2c7be5;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:16px;
+    transition:0.2s;
+}
+
+.boton-guardar button:hover{
+    background:#1a5fc1;
+}
+
+/* RESPONSIVO */
+
+@media (max-width:600px){
+
+    .tabla thead{
+        display:none;
+    }
+
+    .tabla,
+    .tabla tbody,
+    .tabla tr,
+    .tabla td{
+        display:block;
+        width:100%;
+    }
+
+    .tabla tr{
+        margin-bottom:15px;
+        border:1px solid #ddd;
+        padding:10px;
+        border-radius:6px;
+        background:#fafafa;
+    }
+
+    .tabla td{
+        text-align:left;
+        padding:6px 0;
+    }
+
+    .tabla td::before{
+        content:attr(data-label);
+        font-weight:bold;
+        display:block;
+        font-size:14px;
+        margin-bottom:2px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+<h1>Receta Óptica</h1>
+
+<form method="POST">
+{% csrf_token %}
+
+<!-- LEJOS -->
+
+<div class="seccion">
+
+<h2>Lejos</h2>
+
+<table class="tabla">
+
+<thead>
+<tr>
+<th></th>
+<th>Esférico</th>
+<th>Cilíndrico</th>
+<th>Eje</th>
+<th>DP</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+
+<td class="label-ojo">OD</td>
+
+<td data-label="Esférico">
+{{ form.lejos_od_esf }}
+</td>
+
+<td data-label="Cilíndrico">
+{{ form.lejos_od_cil }}
+</td>
+
+<td data-label="Eje">
+{{ form.lejos_od_eje }}
+</td>
+
+<td data-label="DP">
+{{ form.lejos_od_dp }}
+</td>
+
+</tr>
+
+
+<tr>
+
+<td class="label-ojo">OI</td>
+
+<td data-label="Esférico">
+{{ form.lejos_oi_esf }}
+</td>
+
+<td data-label="Cilíndrico">
+{{ form.lejos_oi_cil }}
+</td>
+
+<td data-label="Eje">
+{{ form.lejos_oi_eje }}
+</td>
+
+<td data-label="DP">
+{{ form.lejos_oi_dp }}
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<!-- CERCA -->
+
+<div class="seccion">
+
+<h2>Cerca</h2>
+
+<table class="tabla">
+
+<thead>
+<tr>
+<th></th>
+<th>Esférico</th>
+<th>Cilíndrico</th>
+<th>Eje</th>
+<th>DP</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+
+<td class="label-ojo">OD</td>
+
+<td data-label="Esférico">
+{{ form.cerca_od_esf }}
+</td>
+
+<td data-label="Cilíndrico">
+{{ form.cerca_od_cil }}
+</td>
+
+<td data-label="Eje">
+{{ form.cerca_od_eje }}
+</td>
+
+<td data-label="DP">
+{{ form.cerca_od_dp }}
+</td>
+
+</tr>
+
+
+<tr>
+
+<td class="label-ojo">OI</td>
+
+<td data-label="Esférico">
+{{ form.cerca_oi_esf }}
+</td>
+
+<td data-label="Cilíndrico">
+{{ form.cerca_oi_cil }}
+</td>
+
+<td data-label="Eje">
+{{ form.cerca_oi_eje }}
+</td>
+
+<td data-label="DP">
+{{ form.cerca_oi_dp }}
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<!-- ADD -->
+
+<div class="add-section">
+
+<label>ADD</label>
+
+{{ form.observaciones }}
+
+</div>
+
+
+<div class="boton-guardar">
+<button type="submit">
+Guardar Evaluación
+</button>
+</div>
+
+</form>
+
+</div>
+
+</body>
+</html>

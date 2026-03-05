@@ -1,0 +1,195 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Nueva Ficha Paciente</title>
+
+<style>
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f6f9;
+}
+
+/* HEADER */
+
+.header{
+    background:#1e2a38;
+    color:white;
+    padding:15px 30px;
+}
+
+.header h1{
+    margin:0;
+    font-size:20px;
+}
+
+/* CONTENEDOR */
+
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:30px;
+}
+
+/* CARD */
+
+.card{
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* TITULO */
+
+.card h2{
+    margin-top:0;
+    margin-bottom:25px;
+    color:#2c3e50;
+}
+
+/* GRID FORM */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+/* CAMPOS */
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+
+label{
+    font-weight:bold;
+    margin-bottom:5px;
+    font-size:14px;
+}
+
+input, textarea, select{
+    padding:10px;
+    border-radius:6px;
+    border:1px solid #ccc;
+    font-size:14px;
+}
+
+textarea{
+    resize:vertical;
+    min-height:100px;
+}
+
+/* ANAMNESIS COMPLETA */
+
+.full{
+    grid-column:1 / -1;
+}
+
+/* BOTON */
+
+.btn-submit{
+    margin-top:25px;
+    padding:12px;
+    background:#1faa59;
+    color:white;
+    border:none;
+    border-radius:6px;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    width:100%;
+    transition:background 0.2s;
+}
+
+.btn-submit:hover{
+    background:#188c47;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:700px){
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>Óptica — Sistema Clínico</h1>
+</div>
+
+<div class="container">
+
+<div class="card">
+
+<h2>Nueva Ficha de Paciente — Anamnesis</h2>
+
+<form method="POST">
+
+{% csrf_token %}
+
+<div class="form-grid">
+
+{% for field in form %}
+
+<div class="form-group {% if field.name == 'anamnesis' %}full{% endif %}">
+    
+    <label>{{ field.label }}</label>
+    
+    {{ field }}
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<button type="submit" class="btn-submit">
+Guardar y Continuar a Evaluación
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</body>
+</html>
+
+<script>
+
+const rutInput = document.getElementById("rut_input");
+
+rutInput.addEventListener("input", function(){
+
+let valor = this.value.replace(/\./g,'').replace('-','');
+
+if(valor.length < 2){
+this.value = valor;
+return;
+}
+
+let cuerpo = valor.slice(0,-1);
+let dv = valor.slice(-1);
+
+cuerpo = cuerpo.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+this.value = cuerpo + "-" + dv;
+
+});
+
+</script>

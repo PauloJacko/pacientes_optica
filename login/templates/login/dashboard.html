@@ -66,10 +66,53 @@
         color: white;
     }
 
-    .btn-new {
-        background-color: #2ecc71;
+    .btn-nuevo {
+        display: flex;
+        align-items: center;
+
+        width: 45px;
+        height: 40px;
+
+        background-color: #1faa59;
         color: white;
+
+        border-radius: 20px;
+        text-decoration: none;
+        font-weight: bold;
+
+        overflow: hidden;
+        transition: all 0.3s ease;
+
         margin-left: auto;
+    }
+
+    /* ICONO + */
+
+    .btn-nuevo .icono {
+        min-width: 45px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    /* TEXTO */
+
+    .btn-nuevo .texto {
+        white-space: nowrap;
+        opacity: 0;
+        padding-right: 12px;
+        transition: opacity 0.2s ease;
+    }
+
+    /* EXPANSIÓN */
+
+    .btn-nuevo:hover {
+        width: 180px;
+        background-color: #188c47;
+    }
+
+    .btn-nuevo:hover .texto {
+        opacity: 1;
     }
 
     /* TABLA */
@@ -117,33 +160,42 @@
         <input type="text" placeholder="Buscar por nombre">
         <input type="text" placeholder="Buscar por RUT">
         <button class="btn-search">Buscar</button>
-        <button class="btn-new">+ Nuevo Paciente</button>
+        <a href="{% url 'crear_paciente' %}" class="btn-nuevo">
+            <span class="icono">+</span>
+            <span class="texto">Nuevo Paciente</span>
+        </a>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>RUT</th>
-                <th>Teléfono</th>
-                <th>Ver</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Juan Pérez</td>
-                <td>12.345.678-9</td>
-                <td>987654321</td>
-                <td>🔎</td>
-            </tr>
-            <tr>
-                <td>María Soto</td>
-                <td>11.222.333-4</td>
-                <td>912345678</td>
-                <td>🔎</td>
-            </tr>
-        </tbody>
-    </table>
+<table>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>RUT</th>
+            <th>Teléfono</th>
+            <th>Ver</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        {% for paciente in pacientes %}
+        <tr>
+            <td>{{ paciente.nombre }}</td>
+            <td>{{ paciente.rut }}</td>
+            <td>{{ paciente.telefono }}</td>
+
+            <td>
+                <a href="#">🔎</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No hay pacientes registrados</td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
 
 </div>
 

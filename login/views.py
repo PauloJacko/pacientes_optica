@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.decorators import login_required
+from usuarios.models import Paciente
 
 
 def login_view(request):
@@ -21,9 +22,15 @@ def login_view(request):
 
 @login_required
 def dashboard(request):
-    return render(request, 'login/dashboard.html')
+
+    pacientes = Paciente.objects.all().order_by('-fecha_creacion')
+
+    return render(request, 'login/dashboard.html', {
+        'pacientes': pacientes
+    })
 
 
 def logout_view(request):
     logout(request)
     return redirect('login')
+
