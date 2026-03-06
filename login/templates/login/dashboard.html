@@ -1,145 +1,383 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard - Óptica</title>
 
 <style>
-    body {
-        margin: 0;
-        font-family: Arial, Helvetica, sans-serif;
-        background-color: #f4f6f9;
+
+body{
+    margin:0;
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f6f9;
+}
+
+/* HEADER */
+
+.header{
+    background:#1e2a38;
+    color:white;
+    padding:15px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.header h1{
+    margin:0;
+    font-size:20px;
+}
+
+.header a{
+    color:#ff6b6b;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+/* CONTENIDO */
+
+.container{
+    padding:30px;
+}
+
+.top-bar{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+}
+
+/* INPUTS */
+
+input,
+textarea{
+    padding:8px;
+    border:1px solid #ccc;
+    border-radius:5px;
+}
+
+input[type="text"]{
+    width:200px;
+}
+
+button{
+    padding:8px 15px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.btn-search{
+    background:#3498db;
+    color:white;
+}
+
+/* BOTON NUEVO PACIENTE */
+
+.btn-nuevo{
+    display:flex;
+    align-items:center;
+    width:45px;
+    height:40px;
+    background:#1faa59;
+    color:white;
+    border-radius:20px;
+    text-decoration:none;
+    overflow:hidden;
+    transition:.3s;
+    margin-left:auto;
+}
+
+.btn-nuevo .icono{
+    min-width:45px;
+    text-align:center;
+    font-size:24px;
+}
+
+.btn-nuevo .texto{
+    white-space:nowrap;
+    opacity:0;
+    padding-right:12px;
+    transition:.2s;
+}
+
+.btn-nuevo:hover{
+    width:180px;
+    background:#188c47;
+}
+
+.btn-nuevo:hover .texto{
+    opacity:1;
+}
+
+/* TABLA */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+    border-radius:8px;
+    overflow:hidden;
+}
+
+th{
+    background:#2c3e50;
+    color:white;
+    padding:10px;
+    text-align:left;
+}
+
+td{
+    padding:10px;
+    border-bottom:1px solid #ddd;
+}
+
+tr:hover{
+    background:#f1f1f1;
+    cursor:pointer;
+}
+
+/* MODAL */
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+}
+
+.modal-content{
+    background:white;
+    border-radius:10px;
+    width:90%;
+    max-width:520px;
+    max-height:90vh;
+    display:flex;
+    flex-direction:column;
+    padding:0;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+    animation:modalFade .2s ease;
+}
+
+/* MODAL GRANDE */
+
+.receta-modal{
+    max-width:900px;
+}
+
+/* HEADER MODAL */
+
+.modal-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 20px;
+    border-bottom:1px solid #eee;
+    font-weight:bold;
+    background:white;
+}
+
+.modal-header h2{
+    margin:0;
+    font-size:18px;
+}
+
+/* BOTON CERRAR */
+
+.modal-close{
+    font-size:22px;
+    cursor:pointer;
+    color:#777;
+    transition:.2s;
+}
+
+.modal-close:hover{
+    color:#000;
+}
+
+/* BODY MODAL */
+
+.modal-body{
+    padding:20px;
+    overflow-y:auto;
+}
+
+/* FORM */
+
+.modal input,
+.modal textarea{
+    width:100%;
+    margin-bottom:10px;
+}
+
+/* BOTONES */
+
+.modal button{
+    width:100%;
+    padding:10px;
+    background:#1faa59;
+    color:white;
+    border:none;
+    border-radius:6px;
+    font-weight:bold;
+}
+
+.modal button:hover{
+    background:#188c47;
+}
+
+/* ANIMACION */
+
+@keyframes modalFade{
+    from{
+        opacity:0;
+        transform:scale(.95);
     }
-
-    /* HEADER */
-    .header {
-        background-color: #1e2a38;
-        color: white;
-        padding: 15px 30px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    to{
+        opacity:1;
+        transform:scale(1);
     }
+}
 
-    .header h1 {
-        margin: 0;
-        font-size: 20px;
-    }
+/* ===== RECETA OPTICA ===== */
 
-    .header a {
-        color: #ff6b6b;
-        text-decoration: none;
-        font-weight: bold;
-    }
+.tabla-receta{
+    width:100%;
+    border-collapse:collapse;
+    margin-bottom:18px;
+    font-size:14px;
+}
 
-    /* CONTENIDO */
-    .container {
-        padding: 30px;
-    }
+.tabla-receta thead th{
+    background:#2c3e50;
+    color:white;
+    padding:8px;
+    text-align:center;
+    font-weight:600;
+}
 
-    .top-bar {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 20px;
-        flex-wrap: wrap;
-    }
+.tabla-receta th:first-child{
+    border-top-left-radius:6px;
+}
 
-    input[type="text"] {
-        padding: 8px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        width: 200px;
-    }
+.tabla-receta th:last-child{
+    border-top-right-radius:6px;
+}
 
-    button {
-        padding: 8px 15px;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
-        font-weight: bold;
-    }
+.tabla-receta td{
+    padding:6px;
+    text-align:center;
+    border-bottom:1px solid #e6e6e6;
+}
 
-    .btn-search {
-        background-color: #3498db;
-        color: white;
-    }
+/* FILAS OD / OI */
 
-    .btn-nuevo {
-        display: flex;
-        align-items: center;
+.ojo{
+    font-weight:bold;
+    background:#f7f9fc;
+    width:50px;
+}
 
-        width: 45px;
-        height: 40px;
+/* INPUTS RECETA */
 
-        background-color: #1faa59;
-        color: white;
+.tabla-receta input{
+    width:70px;
+    padding:6px;
+    border:1px solid #dcdcdc;
+    border-radius:4px;
+    text-align:center;
+    font-size:14px;
+    background:#fff;
+    transition:all .15s ease;
+}
 
-        border-radius: 20px;
-        text-decoration: none;
-        font-weight: bold;
+.tabla-receta input:focus{
+    outline:none;
+    border-color:#2c7be5;
+    box-shadow:0 0 0 2px rgba(44,123,229,.15);
+}
 
-        overflow: hidden;
-        transition: all 0.3s ease;
+/* TITULOS LEJOS / CERCA */
 
-        margin-left: auto;
-    }
+.modal-body h3{
+    margin-top:10px;
+    margin-bottom:8px;
+    font-size:15px;
+    font-weight:600;
+    color:#2c3e50;
+}
 
-    /* ICONO + */
+/* OBSERVACIONES */
 
-    .btn-nuevo .icono {
-        min-width: 45px;
-        text-align: center;
-        font-size: 24px;
-        font-weight: bold;
-    }
+.observaciones{
+    margin-top:10px;
+}
 
-    /* TEXTO */
+.observaciones textarea{
+    width:100%;
+    min-height:70px;
+    padding:8px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    resize:vertical;
+}
 
-    .btn-nuevo .texto {
-        white-space: nowrap;
-        opacity: 0;
-        padding-right: 12px;
-        transition: opacity 0.2s ease;
-    }
+/* BOTON GUARDAR */
 
-    /* EXPANSIÓN */
+.btn-guardar-receta{
+    margin-top:15px;
+    width:100%;
+    padding:12px;
+    background:#2c7be5;
+    color:white;
+    border:none;
+    border-radius:6px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.2s;
+}
 
-    .btn-nuevo:hover {
-        width: 180px;
-        background-color: #188c47;
-    }
+.btn-guardar-receta:hover{
+    background:#1a5fc1;
+}
 
-    .btn-nuevo:hover .texto {
-        opacity: 1;
-    }
+/* RESPONSIVE */
 
-    /* TABLA */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        background-color: white;
-        border-radius: 8px;
-        overflow: hidden;
-    }
+@media(max-width:700px){
 
-    th {
-        background-color: #2c3e50;
-        color: white;
-        padding: 10px;
-        text-align: left;
-    }
+table thead{
+    display:none;
+}
 
-    td {
-        padding: 10px;
-        border-bottom: 1px solid #ddd;
-    }
+table,
+table tbody,
+table tr,
+table td{
+    display:block;
+    width:100%;
+}
 
-    tr:hover {
-        background-color: #f1f1f1;
-        cursor: pointer;
-    }
+table tr{
+    margin-bottom:15px;
+    background:white;
+    border-radius:8px;
+    padding:10px;
+}
+
+table td{
+    border:none;
+    padding:5px 0;
+}
+
+}
 
 </style>
 </head>
@@ -147,57 +385,301 @@
 <body>
 
 <div class="header">
-    <h1>Óptica - Sistema Clínico</h1>
-    <div>
-        Bienvenido {{ request.user.username }} |
-        <a href="{% url 'logout' %}">Cerrar sesión</a>
-    </div>
+<h1>Óptica - Sistema Clínico</h1>
+
+<div>
+Bienvenido {{ request.user.username }} |
+<a href="{% url 'logout' %}">Cerrar sesión</a>
 </div>
+</div>
+
 
 <div class="container">
 
-    <div class="top-bar">
-        <input type="text" placeholder="Buscar por nombre">
-        <input type="text" placeholder="Buscar por RUT">
-        <button class="btn-search">Buscar</button>
-        <a href="{% url 'crear_paciente' %}" class="btn-nuevo">
-            <span class="icono">+</span>
-            <span class="texto">Nuevo Paciente</span>
-        </a>
-    </div>
+<div class="top-bar">
+
+<input type="text" placeholder="Buscar por nombre">
+<input type="text" placeholder="Buscar por RUT">
+
+<button class="btn-search">Buscar</button>
+
+<button class="btn-nuevo" onclick="abrirModalPaciente()">
+<span class="icono">+</span>
+<span class="texto">Nuevo Paciente</span>
+</button>
+
+</div>
+
 
 <table>
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>RUT</th>
-            <th>Teléfono</th>
-            <th>Ver</th>
-        </tr>
-    </thead>
 
-    <tbody>
+<thead>
+<tr>
+<th>Nombre</th>
+<th>RUT</th>
+<th>Teléfono</th>
+<th>Ver</th>
+</tr>
+</thead>
 
-        {% for paciente in pacientes %}
-        <tr>
-            <td>{{ paciente.nombre }}</td>
-            <td>{{ paciente.rut }}</td>
-            <td>{{ paciente.telefono }}</td>
+<tbody>
 
-            <td>
-                <a href="#">🔎</a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="4">No hay pacientes registrados</td>
-        </tr>
-        {% endfor %}
+{% for paciente in pacientes %}
 
-    </tbody>
+<tr>
+<td>{{ paciente.nombre }}</td>
+<td>{{ paciente.rut }}</td>
+<td>{{ paciente.telefono }}</td>
+<td><a href="#">🔎</a></td>
+</tr>
+
+{% empty %}
+
+<tr>
+<td colspan="4">No hay pacientes registrados</td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
 </table>
 
 </div>
+
+
+<!-- MODAL PACIENTE -->
+
+<div id="modalPaciente" class="modal">
+
+<div class="modal-content">
+
+<div class="modal-header">
+<h2>Nuevo Paciente</h2>
+<span class="modal-close" onclick="cerrarModalPaciente()">✕</span>
+</div>
+
+<div class="modal-body">
+
+<form id="formPaciente" autocomplete="off">
+
+{% csrf_token %}
+{{ paciente_form }}
+
+<button type="button" onclick="guardarPaciente()">
+Continuar a Evaluación
+</button>
+
+</form>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- MODAL EVALUACION -->
+
+<div id="modalEvaluacion" class="modal">
+
+<div class="modal-content receta-modal">
+
+<div class="modal-header">
+<h2>Receta Óptica</h2>
+<span class="modal-close" onclick="cerrarModalEvaluacion()">✕</span>
+</div>
+
+<div class="modal-body">
+
+<form id="formEvaluacion" autocomplete="off">
+
+{% csrf_token %}
+
+<h3>Lejos</h3>
+
+<table class="tabla-receta">
+
+<thead>
+<tr>
+<th></th>
+<th>Esférico</th>
+<th>Cilíndrico</th>
+<th>Eje</th>
+<th>DP</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td class="ojo">OD</td>
+<td>{{ evaluacion_form.lejos_od_esf }}</td>
+<td>{{ evaluacion_form.lejos_od_cil }}</td>
+<td>{{ evaluacion_form.lejos_od_eje }}</td>
+<td>{{ evaluacion_form.lejos_od_dp }}</td>
+</tr>
+
+<tr>
+<td class="ojo">OI</td>
+<td>{{ evaluacion_form.lejos_oi_esf }}</td>
+<td>{{ evaluacion_form.lejos_oi_cil }}</td>
+<td>{{ evaluacion_form.lejos_oi_eje }}</td>
+<td>{{ evaluacion_form.lejos_oi_dp }}</td>
+</tr>
+
+</tbody>
+</table>
+
+
+<h3>Cerca</h3>
+
+<table class="tabla-receta">
+
+<thead>
+<tr>
+<th></th>
+<th>Esférico</th>
+<th>Cilíndrico</th>
+<th>Eje</th>
+<th>DP</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td class="ojo">OD</td>
+<td>{{ evaluacion_form.cerca_od_esf }}</td>
+<td>{{ evaluacion_form.cerca_od_cil }}</td>
+<td>{{ evaluacion_form.cerca_od_eje }}</td>
+<td>{{ evaluacion_form.cerca_od_dp }}</td>
+</tr>
+
+<tr>
+<td class="ojo">OI</td>
+<td>{{ evaluacion_form.cerca_oi_esf }}</td>
+<td>{{ evaluacion_form.cerca_oi_cil }}</td>
+<td>{{ evaluacion_form.cerca_oi_eje }}</td>
+<td>{{ evaluacion_form.cerca_oi_dp }}</td>
+</tr>
+
+</tbody>
+</table>
+
+<div class="observaciones">
+
+<label>ADD / Observaciones</label>
+
+{{ evaluacion_form.observaciones }}
+
+</div>
+
+<button type="submit" class="btn-guardar-receta">
+Guardar evaluación
+</button>
+
+</form>
+
+</div>
+</div>
+
+
+<script>
+
+let pacienteId=null
+
+const modalPaciente=document.getElementById("modalPaciente")
+const modalEvaluacion=document.getElementById("modalEvaluacion")
+
+function abrirModalPaciente(){ modalPaciente.style.display="flex" }
+function cerrarModalPaciente(){ modalPaciente.style.display="none" }
+
+function abrirModalEvaluacion(){ modalEvaluacion.style.display="flex" }
+function cerrarModalEvaluacion(){ modalEvaluacion.style.display="none" }
+
+
+function guardarPaciente(){
+
+let formData=new FormData(document.getElementById("formPaciente"))
+
+fetch("/usuarios/nuevo/",{
+method:"POST",
+body:formData,
+headers:{ "X-CSRFToken":getCookie("csrftoken") }
+})
+.then(r=>r.json())
+.then(data=>{
+
+if(data.success){
+pacienteId=data.paciente_id
+cerrarModalPaciente()
+abrirModalEvaluacion()
+}else{
+alert("Error al guardar paciente")
+}
+
+})
+
+}
+
+
+document.getElementById("formEvaluacion").addEventListener("submit",function(e){
+
+e.preventDefault()
+
+let formData=new FormData(this)
+
+fetch(`/evaluaciones/nuevo/${pacienteId}/`,{
+method:"POST",
+body:formData,
+headers:{ "X-CSRFToken":getCookie("csrftoken") }
+})
+.then(r=>r.json())
+.then(data=>{
+
+if(data.success){
+alert("Paciente y evaluación guardados")
+location.reload()
+}
+
+})
+
+})
+
+
+function getCookie(name){
+
+let cookieValue=null
+
+if(document.cookie){
+
+document.cookie.split(";").forEach(cookie=>{
+
+cookie=cookie.trim()
+
+if(cookie.startsWith(name+"=")){
+cookieValue=decodeURIComponent(cookie.substring(name.length+1))
+}
+
+})
+
+}
+
+return cookieValue
+}
+
+window.onclick = function(event){
+
+if(event.target === modalPaciente){
+cerrarModalPaciente()
+}
+
+if(event.target === modalEvaluacion){
+cerrarModalEvaluacion()
+}
+
+}
+</script>
 
 </body>
 </html>
