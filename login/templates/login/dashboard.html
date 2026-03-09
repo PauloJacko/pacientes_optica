@@ -432,6 +432,34 @@
           padding: 5px 0;
         }
       }
+
+      /* ACCIONES TABLA */
+
+      .acciones{
+        display:flex;
+        gap:20px;
+        align-items:center;
+      }
+
+      .btn-ver{
+        text-decoration:none;
+        font-size:17px;
+      }
+
+      .btn-eliminar{
+        background:#e74c3c;
+        color:white;
+        border:none;
+        padding:6px 10px;
+        border-radius:4px;
+        cursor:pointer;
+        font-size:14px;
+        transition:0.2s;
+      }
+
+      .btn-eliminar:hover{
+        background:#c0392b;
+      }
     </style>
   </head>
 
@@ -484,8 +512,9 @@
               <td>{{ paciente.rut }}</td>
               <td>{{ paciente.telefono }}</td>
               <td>{{ paciente.institucion }}</td>
-              <td>
-                <a href="#">🔎</a>
+              <td class="acciones">
+                <a href="#" class="btn-ver">🔎</a>
+                <button class="btn-eliminar" onclick="abrirModalEliminar({{ paciente.id }}, '{{ paciente.nombre }}')">🗑</button>
               </td>
             </tr>
           {% empty %}
@@ -625,6 +654,43 @@
         </div>
       </div>
 
+      <!-- MODAL ELIMINAR -->
+
+      <div id="modalEliminar" class="modal">
+        <div class="modal-content" style="max-width:420px">
+
+          <div class="modal-header">
+            <h2>Eliminar paciente</h2>
+            <span class="modal-close" onclick="cerrarModalEliminar()">✕</span>
+          </div>
+
+          <div class="modal-body">
+
+            <p id="textoEliminar" style="margin-bottom:20px"></p>
+
+            <div style="display:flex; gap:10px">
+
+              <button 
+                type="button"
+                onclick="confirmarEliminar()"
+                style="background:#e74c3c">
+                Eliminar
+              </button>
+
+              <button 
+                type="button"
+                onclick="cerrarModalEliminar()"
+                style="background:#95a5a6">
+                Cancelar
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
       <script>
         let pacienteId = null
         
@@ -731,6 +797,46 @@
 
         if (rutPaciente) formatearRutInput(rutPaciente)
         if (rutBusqueda) formatearRutInput(rutBusqueda)
+
+      let pacienteEliminarId = null
+
+      const modalEliminar = document.getElementById("modalEliminar")
+      const textoEliminar = document.getElementById("textoEliminar")
+
+      function abrirModalEliminar(id, nombre){
+
+        pacienteEliminarId = id
+
+        textoEliminar.innerHTML =
+          "¿Seguro que deseas eliminar al paciente <b>" + nombre + "</b> ?<br><br>Esta acción no se puede deshacer."
+
+        modalEliminar.style.display = "flex"
+      }
+
+      function cerrarModalEliminar(){
+        modalEliminar.style.display = "none"
+      }
+
+      function confirmarEliminar(){
+
+        fetch(`/pacientes/eliminar/${pacienteEliminarId}/`,{
+          method:"POST",
+          headers:{
+            "X-CSRFToken": getCookie("csrftoken")
+          }
+        })
+        .then(r=>r.json())
+        .then(data=>{
+
+          if(data.success){
+            location.reload()
+          }else{
+            alert("Error al eliminar")
+          }
+
+        })
+
+      }
       </script>
     </div>
   </body>

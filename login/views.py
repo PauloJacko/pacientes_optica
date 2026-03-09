@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
 from django.core.paginator import Paginator
 
 from usuarios.models import Paciente
 from usuarios.forms import PacienteForm
 from evaluaciones.forms import EvaluacionForm
-
 
 def login_view(request):
 
@@ -67,3 +68,17 @@ def logout_view(request):
 
     logout(request)
     return redirect('login')
+
+@require_POST
+@login_required
+def eliminar_paciente(request, id):
+
+    try:
+        paciente = Paciente.objects.get(id=id)
+        paciente.delete()
+
+        return JsonResponse({'success': True})
+
+    except Paciente.DoesNotExist:
+
+        return JsonResponse({'success': False})
