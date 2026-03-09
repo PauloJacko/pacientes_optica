@@ -1,149 +1,183 @@
 {% load static %}
 <!DOCTYPE html>
+
 <html lang="es">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login - LCM</title>
 
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: Arial, Helvetica, sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - LCM</title>
 
-    body {
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        overflow: hidden;
-    }
+    <style>
 
-    /* Imagen de fondo */
-    body::before {
-        content: "";
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background: url("{% static 'images/imagen-login.jpeg' %}") no-repeat center center/cover;
-        filter: blur(6px);
-        transform: scale(1.1);
-        z-index: -1;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
-    /* Contenedor del login */
-    .login-container {
-        background: rgba(255, 255, 255, 0.75);
-        padding: 40px;
-        width: 90%;
-        max-width: 400px;
-        border-radius: 15px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        text-align: center;
-    }
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-    .login-container img {
-        width: 140px;
-        margin-bottom: 20px;
-    }
+        /* Imagen de fondo */
 
-    .login-container h2 {
-        margin-bottom: 20px;
-        color: #333;
-    }
+        body::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url("{% static 'images/imagen-login.jpeg' %}") no-repeat center center / cover;
+            filter: blur(6px);
+            transform: scale(1.1);
+            z-index: -1;
+        }
 
-    .login-container input {
-        width: 100%;
-        padding: 12px;
-        margin-bottom: 15px;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        font-size: 14px;
-        transition: 0.3s;
-    }
+        /* Contenedor del login */
 
-    .login-container input:focus {
-        border-color: #007bff;
-        outline: none;
-        box-shadow: 0 0 5px rgba(0,123,255,0.3);
-    }
-
-    .login-container button {
-        width: 30%;
-        padding: 12px;
-        border: none;
-        border-radius: 10px;
-        background-color: #007bff;
-        color: white;
-        font-size: 15px;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-
-    .login-container button:hover {
-        background-color: #0056b3;
-    }
-
-    .login-title {
-        font-size: 20px;
-        font-weight: 500;
-        color: #222;
-        position: relative;
-    }
-
-    .login-title::after {
-        content: "";
-        width: 40px;
-        height: 3px;
-        background-color: #007bff;
-        display: block;
-        margin: 8px auto 0 auto;
-        border-radius: 5px;
-    }
-
-    .error-message {
-        color: red;
-        margin-bottom: 15px;
-        font-size: 14px;
-    }
-
-    /* Responsive extra para pantallas muy pequeñas */
-    @media (max-width: 400px) {
         .login-container {
-            padding: 25px;
+            background: rgba(255, 255, 255, 0.75);
+            padding: 40px;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
         }
 
         .login-container img {
-            width: 110px;
+            width: 140px;
+            margin-bottom: 20px;
         }
-    }
 
-</style>
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .login-container input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .login-container input:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+        }
+
+        .login-container button {
+            width: 30%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background-color: #007bff;
+            color: white;
+            font-size: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .login-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: #222;
+            position: relative;
+        }
+
+        .login-title::after {
+            content: "";
+            width: 40px;
+            height: 3px;
+            background-color: #007bff;
+            display: block;
+            margin: 8px auto 0 auto;
+            border-radius: 5px;
+        }
+
+        .error-message {
+            color: red;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 400px) {
+
+            .login-container {
+                padding: 25px;
+            }
+
+            .login-container img {
+                width: 110px;
+            }
+
+        }
+
+    </style>
+
 </head>
+
+
 <body>
 
-<div class="login-container">
+    <div class="login-container">
 
-    <img src="{% static 'images/logo-lcm.png' %}" alt="Logo LCM">
+        <img src="{% static 'images/logo-lcm.png' %}" alt="Logo LCM">
 
-    <h2 class="login-title">Iniciar Sesión</h2>
+        <h2 class="login-title">
+            Iniciar Sesión
+        </h2>
 
-    {% if error %}
-        <div class="error-message">{{ error }}</div>
-    {% endif %}
+        {% if error %}
+            <div class="error-message">
+                {{ error }}
+            </div>
+        {% endif %}
 
-    <form method="post">
-        {% csrf_token %}
-        <input type="text" name="username" placeholder="Usuario" required>
-        <input type="password" name="password" placeholder="Contraseña" required>
-        <button type="submit">Ingresar</button>
-    </form>
+        <form method="post">
 
-</div>
+            {% csrf_token %}
+
+            <input
+                type="text"
+                name="username"
+                placeholder="Usuario"
+                required
+            >
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Contraseña"
+                required
+            >
+
+            <button type="submit">
+                Ingresar
+            </button>
+
+        </form>
+
+    </div>
 
 </body>
+
 </html>

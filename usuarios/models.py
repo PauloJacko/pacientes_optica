@@ -5,6 +5,7 @@ class Paciente(models.Model):
     rut = models.CharField(max_length=20, unique=True)
     fecha_nacimiento = models.DateField()
     telefono = models.CharField(max_length=20, blank=True)
+    institucion = models.CharField(max_length=150, blank=True)
     anamnesis = models.TextField(blank=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 

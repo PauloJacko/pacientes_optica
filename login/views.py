@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 from usuarios.models import Paciente
 from usuarios.forms import PacienteForm
@@ -33,7 +34,24 @@ def login_view(request):
 @login_required
 def dashboard(request):
 
-    pacientes = Paciente.objects.all().order_by('-fecha_creacion')
+    pacientes_lista = Paciente.objects.all().order_by('-fecha_creacion')
+
+    nombre = request.GET.get('nombre')
+    rut = request.GET.get('rut')
+    institucion = request.GET.get('institucion')
+
+    if nombre:
+        pacientes_lista = pacientes_lista.filter(nombre__icontains=nombre)
+
+    if rut:
+        pacientes_lista = pacientes_lista.filter(rut__icontains=rut)
+
+    if institucion:
+        pacientes_lista = pacientes_lista.filter(institucion__icontains=institucion)
+
+    paginator = Paginator(pacientes_lista, 12)
+    page_number = request.GET.get('page')
+    pacientes = paginator.get_page(page_number)
 
     paciente_form = PacienteForm()
     evaluacion_form = EvaluacionForm()
