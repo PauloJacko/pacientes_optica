@@ -1,0 +1,349 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Ficha Paciente</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background:#f4f6f9;
+}
+
+/* HEADER */
+
+.header{
+background:#1e2a38;
+color:white;
+padding:15px 25px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.header-left{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.header-left h1{
+margin:0;
+font-size:16px;
+font-weight:600;
+color:white;
+}
+
+.logo-lcm{
+height:50px;
+}
+
+/* CONTAINER */
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:30px 20px;
+}
+
+/* TARJETA PACIENTE */
+
+.card{
+background:white;
+border-radius:10px;
+padding:25px;
+box-shadow:0 3px 10px rgba(0,0,0,0.08);
+margin-bottom:25px;
+}
+
+.card h2{
+margin-top:0;
+margin-bottom:20px;
+}
+
+/* GRID PACIENTE */
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:15px;
+}
+
+.info{
+background:#f7f9fb;
+padding:12px;
+border-radius:6px;
+}
+
+.label{
+font-size:12px;
+color:#777;
+}
+
+.valor{
+font-weight:bold;
+margin-top:4px;
+}
+
+/* BOTONES */
+
+.actions{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:20px;
+}
+
+.btn{
+padding:10px 16px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-weight:bold;
+display:flex;
+align-items:center;
+gap:6px;
+}
+
+.btn-nuevo{
+background: #1c7e45;
+color:white;
+}
+
+
+/* TABLA EVALUACIONES */
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+border-radius:8px;
+overflow:hidden;
+}
+
+th,td{
+padding:12px;
+text-align:center;
+border-bottom:1px solid #eee;
+}
+
+th{
+background:#2c3e50;
+color:white;
+font-size:14px;
+}
+
+tr:hover{
+background:#f5f7fa;
+}
+
+/* RECETA GRID */
+
+.receta{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+font-size:13px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:700px){
+
+.receta{
+grid-template-columns:1fr;
+}
+
+th,td{
+font-size:12px;
+padding:8px;
+}
+
+}
+
+/* FILAS EVALUACIÓN */
+
+.fila-evaluacion{
+cursor:pointer;
+}
+
+.fila-evaluacion:hover{
+background:#eef3f8;
+}
+
+.btn-volver{
+text-decoration:none;
+background:#ecf0f1;
+padding:8px 14px;
+border-radius:6px;
+color:#2c3e50;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<div class="header-left">
+<img src="{% static 'images/logo-lcm.png' %}" class="logo-lcm">
+<h1>Ficha Paciente</h1>
+</div>
+
+
+<div>
+<a href="{% url 'dashboard' %}" class="btn-volver">⬅ Volver</a>
+</div>
+
+</div>
+
+
+<div class="container">
+
+<!-- DATOS PACIENTE -->
+
+<div class="card">
+
+<h2>{{ paciente.nombre }}</h2>
+
+<div class="grid">
+
+<div class="info">
+<div class="label">RUT</div>
+<div class="valor">{{ paciente.rut }}</div>
+</div>
+
+<div class="info">
+<div class="label">Edad</div>
+<div class="valor">{{ paciente.edad }} años</div>
+</div>
+
+<div class="info">
+<div class="label">Teléfono</div>
+<div class="valor">{{ paciente.telefono }}</div>
+</div>
+
+<div class="info">
+<div class="label">Institución</div>
+<div class="valor">{{ paciente.institucion }}</div>
+</div>
+
+<div class="info">
+<div class="label">Fecha nacimiento</div>
+<div class="valor">{{ paciente.fecha_nacimiento }}</div>
+</div>
+
+</div>
+
+{% if paciente.anamnesis %}
+<div style="margin-top:20px">
+
+<b>Anamnesis</b>
+
+<p>{{ paciente.anamnesis }}</p>
+
+</div>
+{% endif %}
+
+
+<div class="actions">
+
+<button class="btn btn-nuevo">
+➕ Nueva Evaluación
+</button>
+
+</div>
+
+</div>
+
+<!-- HISTORIAL EVALUACIONES -->
+
+<div class="card">
+
+<h2>Historial de Evaluaciones</h2>
+
+<table>
+
+<thead>
+
+<tr>
+<th>Fecha</th>
+<th>Lejos</th>
+<th>Cerca</th>
+<th>Observaciones</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for e in evaluaciones %}
+
+<tr class="fila-evaluacion" onclick="window.location.href='{% url 'ver_receta' e.id %}'">
+
+<td>{{ e.fecha }}</td>
+
+<td>
+
+<div class="receta">
+
+<div><b>OD</b> {{ e.lejos_od_esf }} {{ e.lejos_od_cil }} {{ e.lejos_od_eje }}</div>
+
+<div><b>OI</b> {{ e.lejos_oi_esf }} {{ e.lejos_oi_cil }} {{ e.lejos_oi_eje }}</div>
+
+</div>
+
+</td>
+
+<td>
+
+<div class="receta">
+
+<div><b>OD</b> {{ e.cerca_od_esf }} {{ e.cerca_od_cil }} {{ e.cerca_od_eje }}</div>
+
+<div><b>OI</b> {{ e.cerca_oi_esf }} {{ e.cerca_oi_cil }} {{ e.cerca_oi_eje }}</div>
+
+</div>
+
+</td>
+
+<td>
+
+{{ e.observaciones|default:"-" }}
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="4">
+No hay evaluaciones registradas
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>

@@ -513,7 +513,7 @@
               <td>{{ paciente.telefono }}</td>
               <td>{{ paciente.institucion }}</td>
               <td class="acciones">
-                <a href="#" class="btn-ver">🔎</a>
+                <a href="{% url 'ficha_paciente' paciente.id %}" class="btn-ver">🔎</a>
                 <button class="btn-eliminar" onclick="abrirModalEliminar({{ paciente.id }}, '{{ paciente.nombre }}')">🗑</button>
               </td>
             </tr>
