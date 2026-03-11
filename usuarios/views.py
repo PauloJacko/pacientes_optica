@@ -5,7 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from usuarios.models import Paciente
 from evaluaciones.models import Evaluacion
 from .models import Paciente
-
+from evaluaciones.forms import EvaluacionForm
 
 @require_POST
 def crear_paciente(request):
@@ -35,9 +35,12 @@ def ficha_paciente(request, paciente_id):
         paciente=paciente
     ).order_by("-fecha")
 
+    evaluacion_form = EvaluacionForm()
+
     return render(request, "usuarios/ficha_paciente.html", {
         "paciente": paciente,
-        "evaluaciones": evaluaciones
+        "evaluaciones": evaluaciones,
+        "evaluacion_form": evaluacion_form
     })
 
 def editar_paciente(request, paciente_id):
