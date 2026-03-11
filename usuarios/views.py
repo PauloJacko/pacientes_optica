@@ -1,9 +1,10 @@
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from .forms import PacienteForm
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from usuarios.models import Paciente
 from evaluaciones.models import Evaluacion
+from .models import Paciente
 
 
 @require_POST
@@ -38,3 +39,20 @@ def ficha_paciente(request, paciente_id):
         "paciente": paciente,
         "evaluaciones": evaluaciones
     })
+
+def editar_paciente(request, paciente_id):
+
+    paciente = get_object_or_404(Paciente, id=paciente_id)
+
+    if request.method == "POST":
+
+        paciente.nombre = request.POST.get("nombre")
+        paciente.rut = request.POST.get("rut")
+        paciente.fecha_nacimiento = request.POST.get("fecha_nacimiento")
+        paciente.telefono = request.POST.get("telefono")
+        paciente.institucion = request.POST.get("institucion")
+        paciente.anamnesis = request.POST.get("anamnesis")
+
+        paciente.save()
+
+    return redirect("ficha_paciente", paciente_id=paciente.id)

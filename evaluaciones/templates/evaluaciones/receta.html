@@ -4,403 +4,352 @@
 
 <!DOCTYPE html>
 <html lang="es">
-
-<head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Receta Óptica</title>
-
-<style>
-
-body{
-font-family:Arial, Helvetica, sans-serif;
-background:#f4f6f9;
-padding:30px;
-}
-
-/* HOJA */
-
-.receta-hoja{
-max-width:700px;
-margin:auto;
-background:white;
-padding:40px;
-box-shadow:0 5px 20px rgba(0,0,0,0.1);
-}
-
-/* HEADER */
-
-.receta-header{
-position:relative;
-display:flex;
-align-items:center;
-gap:10px;
-border-bottom:2px solid #ddd;
-padding-bottom:15px;
-margin-bottom:20px;
-}
-
-.titulo{
-font-size:26px;
-font-weight:bold;
-position:absolute;
-left:50%;
-transform:translateX(-50%);
-}
-
-.logo{
-height:60px;
-}
-
-.btn-volver{
-display:flex;
-align-items:center;
-justify-content:center;
-width:38px;
-height:38px;
-border-radius:50%;
-text-decoration:none;
-font-size:20px;
-color:#2c3e50;
-margin-right:10px;
-transition:background 0.2s;
-}
-
-.btn-volver:hover{
-background:#e9eef5;
-}
-
-/* DATOS PACIENTE */
-
-.datos{
-margin-bottom:25px;
-}
-
-.datos-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:14px;
-justify-items:center;
-text-align:center;
-margin-top:10px;
-}
-
-.dato{
-font-size:14px;
-width:100%;
-}
-
-.label{
-font-weight:bold;
-}
-
-/* TABLA RECETA */
-
-.tabla-receta{
-width:100%;
-border-collapse:collapse;
-margin-bottom:25px;
-}
-
-.tabla-receta th,
-.tabla-receta td{
-border:1px solid #000;
-padding:10px;
-text-align:center;
-}
-
-.tabla-receta th{
-background:#f3f3f3;
-}
-
-/* OBSERVACIONES */
-
-.observaciones{
-margin-bottom:50px;
-}
-
-.observaciones-box{
-border:1px solid #000;
-padding:15px;
-margin-top:15px;
-min-height:60px;
-}
-
-/* FIRMA */
-
-.firma{
-margin-top:110px;
-text-align:center;
-}
-
-.linea{
-border-top:1px solid #000;
-width:250px;
-margin:auto;
-margin-bottom:5px;
-}
-
-/* FOOTER */
-
-.footer{
-margin-top:60px;
-padding-top:15px;
-border-top:1px solid #999;
-text-align:center;
-font-size:13px;
-color:#444;
-}
-
-/* BOTONES */
-
-.actions{
-display:flex;
-justify-content:flex-end;
-margin-top:30px;
-}
-
-.btn{
-padding:10px 20px;
-border:none;
-border-radius:6px;
-cursor:pointer;
-font-weight:bold;
-margin:5px;
-}
-
-.btn-print{
-background: #1c7e45;
-color:white;
-}
-
-/* IMPRESION */
-
-@media print{
-
-.actions{
-display:none;
-}
-
-.no-print{
-display:none !important;
-}
-
-body{
-background:white;
-padding:0;
-}
-
-.receta-hoja{
-box-shadow:none;
-page-break-inside:avoid;
-break-inside:avoid;
-}
-
-.firma{
-margin-top:80px;
-}
-
-}
-
-@page{
-size:A4;
-margin:12mm;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="actions">
-    <button class="btn btn-print" onclick="window.print()">
-        🖨 Imprimir
-    </button>
-</div>
-
-
-<div class="receta-hoja">
-
-<!-- HEADER -->
-
-<div class="receta-header">
-
-<a href="{% url 'ficha_paciente' paciente.id %}" class="btn-volver no-print">
-←
-</a>
-
-<img src="{% static 'images/logo-lcm.png' %}" class="logo">
-
-<div class="titulo">
-RECETA ÓPTICA
-</div>
-
-</div>
-
-
-<!-- DATOS PACIENTE -->
-
-<div class="datos">
-
-<div class="datos-grid">
-
-<div class="dato">
-<span class="label">Nombre:</span>
-{{ paciente.nombre }}
-</div>
-
-<div class="dato">
-<span class="label">RUT:</span>
-{{ paciente.rut }}
-</div>
-
-<div class="dato">
-<span class="label">Edad:</span>
-{{ paciente.edad }} años
-</div>
-
-<div class="dato">
-<span class="label">Fecha:</span>
-{{ evaluacion.fecha|date:"d \\d\\e F \\d\\e Y" }}
-</div>
-
-</div>
-
-</div>
-
-
-<!-- LEJOS -->
-
-<h3>Visión Lejana</h3>
-
-<table class="tabla-receta">
-
-<thead>
-
-<tr>
-<th></th>
-<th>Esférico</th>
-<th>Cilíndrico</th>
-<th>Eje</th>
-<th>DP</th>
-</tr>
-
-</thead>
-
-<tbody>
-
-<tr>
-
-<td><b>OD</b></td>
-
-<td>{{ evaluacion.lejos_od_esf }}</td>
-<td>{{ evaluacion.lejos_od_cil }}</td>
-<td>{{ evaluacion.lejos_od_eje }}</td>
-<td>{{ evaluacion.lejos_od_dp }}</td>
-
-</tr>
-
-<tr>
-
-<td><b>OI</b></td>
-
-<td>{{ evaluacion.lejos_oi_esf }}</td>
-<td>{{ evaluacion.lejos_oi_cil }}</td>
-<td>{{ evaluacion.lejos_oi_eje }}</td>
-<td>{{ evaluacion.lejos_oi_dp }}</td>
-
-</tr>
-
-</tbody>
-
-</table>
-
-
-<!-- CERCA -->
-
-<h3>Visión Cercana</h3>
-
-<table class="tabla-receta">
-
-<thead>
-
-<tr>
-<th></th>
-<th>Esférico</th>
-<th>Cilíndrico</th>
-<th>Eje</th>
-<th>DP</th>
-</tr>
-
-</thead>
-
-<tbody>
-
-<tr>
-
-<td><b>OD</b></td>
-
-<td>{{ evaluacion.cerca_od_esf }}</td>
-<td>{{ evaluacion.cerca_od_cil }}</td>
-<td>{{ evaluacion.cerca_od_eje }}</td>
-<td>{{ evaluacion.cerca_od_dp }}</td>
-
-</tr>
-
-<tr>
-
-<td><b>OI</b></td>
-
-<td>{{ evaluacion.cerca_oi_esf }}</td>
-<td>{{ evaluacion.cerca_oi_cil }}</td>
-<td>{{ evaluacion.cerca_oi_eje }}</td>
-<td>{{ evaluacion.cerca_oi_dp }}</td>
-
-</tr>
-
-</tbody>
-
-</table>
-
-
-<!-- OBSERVACIONES -->
-
-<div class="observaciones">
-
-<b>ADD</b>
-
-<div class="observaciones-box">
-{{ evaluacion.observaciones }}
-</div>
-
-</div>
-
-
-<!-- FIRMA -->
-
-<div class="firma">
-
-<div class="linea"></div>
-
-Firma
-
-</div>
-
-
-<!-- FOOTER EMPRESA -->
-
-<div class="footer">
-
-www.serviciosopticoslcm.cl<br>
-Serrano 73, oficina 309.<br>
-Teléfono: +56988037117
-
-</div>
-
-</div>
-
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>RECETA {{ paciente.nombre }}</title>
+
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f4f6f9;
+        padding: 30px;
+      }
+      
+      /* HOJA */
+      
+      .receta-hoja {
+        max-width: 700px;
+        margin: auto;
+        background: white;
+        padding: 40px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      }
+      
+      /* HEADER */
+      
+      .receta-header {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-bottom: 2px solid #ddd;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+      }
+      
+      .titulo {
+        font-size: 26px;
+        font-weight: bold;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      
+      .logo {
+        height: 60px;
+      }
+      
+      .btn-volver {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        text-decoration: none;
+        font-size: 20px;
+        color: #2c3e50;
+        margin-right: 10px;
+        transition: background 0.2s;
+      }
+      
+      .btn-volver:hover {
+        background: #e9eef5;
+      }
+      
+      /* DATOS PACIENTE */
+      
+      .datos {
+        margin-bottom: 25px;
+      }
+      
+      .datos-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        justify-items: center;
+        text-align: center;
+        margin-top: 10px;
+      }
+      
+      .dato {
+        font-size: 14px;
+        width: 100%;
+      }
+      
+      .label {
+        font-weight: bold;
+      }
+      
+      /* TABLA RECETA */
+      
+      .tabla-receta {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 25px;
+      }
+      
+      .tabla-receta th,
+      .tabla-receta td {
+        border: 1px solid #000;
+        padding: 10px;
+        text-align: center;
+      }
+      
+      .tabla-receta th {
+        background: #f3f3f3;
+      }
+      
+      /* OBSERVACIONES */
+      
+      .observaciones {
+        margin-bottom: 50px;
+      }
+      
+      .observaciones-box {
+        border: 1px solid #000;
+        padding: 15px;
+        margin-top: 15px;
+        min-height: 60px;
+      }
+      
+      /* FIRMA */
+      
+      .firma {
+        margin-top: 110px;
+        text-align: center;
+      }
+      
+      .linea {
+        border-top: 1px solid #000;
+        width: 250px;
+        margin: auto;
+        margin-bottom: 5px;
+      }
+      
+      /* FOOTER */
+      
+      .footer {
+        margin-top: 60px;
+        padding-top: 15px;
+        border-top: 1px solid #999;
+        text-align: center;
+        font-size: 13px;
+        color: #444;
+      }
+      
+      /* BOTONES */
+      
+      .actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 30px;
+      }
+      
+      .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        margin: 5px;
+      }
+      
+      .btn-print {
+        background: #1c7e45;
+        color: white;
+      }
+      
+      /* IMPRESION */
+      
+      @media print {
+        .actions {
+          display: none;
+        }
+      
+        .no-print {
+          display: none !important;
+        }
+      
+        body {
+          background: white;
+          padding: 0;
+        }
+      
+        .receta-hoja {
+          box-shadow: none;
+          page-break-inside: avoid;
+          break-inside: avoid;
+        }
+      
+        .firma {
+          margin-top: 80px;
+        }
+      }
+      
+      @page {
+        size: A4;
+        margin: 12mm;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="actions">
+      <button class="btn btn-print" onclick="window.print()">🖨 Imprimir</button>
+    </div>
+
+    <div class="receta-hoja">
+
+      <!-- HEADER -->
+
+      <div class="receta-header">
+        <a href="{% url 'ficha_paciente' paciente.id %}" class="btn-volver no-print">←</a>
+
+        <img src="{% static 'images/logo-lcm.png' %}" class="logo" />
+
+        <div class="titulo">RECETA ÓPTICA</div>
+      </div>
+
+      <!-- DATOS PACIENTE -->
+
+      <div class="datos">
+        <div class="datos-grid">
+          <div class="dato">
+            <span class="label">Nombre:</span>
+            {{ paciente.nombre }}
+          </div>
+
+          <div class="dato">
+            <span class="label">RUT:</span>
+            {{ paciente.rut }}
+          </div>
+
+          <div class="dato">
+            <span class="label">Edad:</span>
+            {{ paciente.edad }} años
+          </div>
+
+          <div class="dato">
+            <span class="label">Fecha:</span>
+            {{ evaluacion.fecha|date:'d \\d\\e F \\d\\e Y' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- LEJOS -->
+
+      <h3>Visión Lejana</h3>
+
+      <table class="tabla-receta">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Esférico</th>
+            <th>Cilíndrico</th>
+            <th>Eje</th>
+            <th>DP</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>
+              <b>OD</b>
+            </td>
+
+            <td>{{ evaluacion.lejos_od_esf }}</td>
+            <td>{{ evaluacion.lejos_od_cil }}</td>
+            <td>{{ evaluacion.lejos_od_eje }}</td>
+            <td>{{ evaluacion.lejos_od_dp }}</td>
+          </tr>
+
+          <tr>
+            <td>
+              <b>OI</b>
+            </td>
+
+            <td>{{ evaluacion.lejos_oi_esf }}</td>
+            <td>{{ evaluacion.lejos_oi_cil }}</td>
+            <td>{{ evaluacion.lejos_oi_eje }}</td>
+            <td>{{ evaluacion.lejos_oi_dp }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- CERCA -->
+
+      <h3>Visión Cercana</h3>
+
+      <table class="tabla-receta">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Esférico</th>
+            <th>Cilíndrico</th>
+            <th>Eje</th>
+            <th>DP</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>
+              <b>OD</b>
+            </td>
+
+            <td>{{ evaluacion.cerca_od_esf }}</td>
+            <td>{{ evaluacion.cerca_od_cil }}</td>
+            <td>{{ evaluacion.cerca_od_eje }}</td>
+            <td>{{ evaluacion.cerca_od_dp }}</td>
+          </tr>
+
+          <tr>
+            <td>
+              <b>OI</b>
+            </td>
+
+            <td>{{ evaluacion.cerca_oi_esf }}</td>
+            <td>{{ evaluacion.cerca_oi_cil }}</td>
+            <td>{{ evaluacion.cerca_oi_eje }}</td>
+            <td>{{ evaluacion.cerca_oi_dp }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- OBSERVACIONES -->
+
+      <div class="observaciones">
+        <b>ADD</b>
+
+        <div class="observaciones-box">{{ evaluacion.observaciones }}</div>
+      </div>
+
+      <!-- FIRMA -->
+
+      <div class="firma">
+        <div class="linea"></div>Firma
+      </div>
+
+      <!-- FOOTER EMPRESA -->
+
+      <div class="footer">
+        www.serviciosopticoslcm.cl<br />
+        Serrano 73, oficina 309.<br />
+        Teléfono: +56988037117
+      </div>
+    </div>
+  </body>
 </html>

@@ -1,349 +1,434 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
+    <title>Ficha Paciente</title>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f4f6f9;
+      }
+      
+      /* HEADER */
+      
+      .header {
+        background: #1e2a38;
+        color: white;
+        padding: 15px 25px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+      
+      .header-left h1 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: white;
+      }
+      
+      .logo-lcm {
+        height: 50px;
+      }
+      
+      /* CONTAINER */
+      
+      .container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 30px 20px;
+      }
+      
+      /* TARJETA PACIENTE */
+      
+      .card {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        margin-bottom: 25px;
+      }
+      
+      .card h2 {
+        margin-top: 0;
+        margin-bottom: 20px;
+      }
+      
+      /* GRID PACIENTE */
+      
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 15px;
+      }
+      
+      .info {
+        background: #f7f9fb;
+        padding: 12px;
+        border-radius: 6px;
+      }
+      
+      .label {
+        font-size: 12px;
+        color: #777;
+      }
+      
+      .valor {
+        font-weight: bold;
+        margin-top: 4px;
+      }
+      
+      /* BOTONES */
+      
+      .actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 20px;
+      }
+      
+      .btn {
+        padding: 10px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      
+      .btn-nuevo {
+        background: #1c7e45;
+        color: white;
+      }
 
-<title>Ficha Paciente</title>
+      .btn-editar{
+        background:#2980b9;
+        color:white;
+    }
+      
+      /* TABLA EVALUACIONES */
+      
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      
+      th,
+      td {
+        padding: 12px;
+        text-align: center;
+        border-bottom: 1px solid #eee;
+      }
+      
+      th {
+        background: #2c3e50;
+        color: white;
+        font-size: 14px;
+      }
+      
+      tr:hover {
+        background: #f5f7fa;
+      }
+      
+      /* RECETA GRID */
+      
+      .receta {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        font-size: 13px;
+      }
+      
+      /* RESPONSIVIDAD DE LA WEA */
+      
+      @media (max-width: 700px) {
+        .receta {
+          grid-template-columns: 1fr;
+        }
+      
+        th,
+        td {
+          font-size: 12px;
+          padding: 8px;
+        }
+      }
+      
+      /* FILAS EVALUACIÓN */
+      
+      .fila-evaluacion {
+        cursor: pointer;
+      }
+      
+      .fila-evaluacion:hover {
+        background: #eef3f8;
+      }
+      
+      .btn-volver {
+        text-decoration: none;
+        background: #ecf0f1;
+        padding: 8px 14px;
+        border-radius: 6px;
+        color: #2c3e50;
+        font-weight: bold;
+      }
 
-<style>
+      /* MODAL EDITAR PACIENTE */
 
-body{
-margin:0;
-font-family:Arial, Helvetica, sans-serif;
-background:#f4f6f9;
-}
+    .modal{
+        display:none;
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background:rgba(0,0,0,0.4);
+        justify-content:center;
+        align-items:center;
+        }
 
-/* HEADER */
+        .modal-content{
+        background:white;
+        padding:25px;
+        border-radius:8px;
+        width:500px;
+        max-width:90%;
+        }
 
-.header{
-background:#1e2a38;
-color:white;
-padding:15px 25px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
+        .modal-header{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:15px;
+        }
 
-.header-left{
-display:flex;
-align-items:center;
-gap:15px;
-}
+        .cerrar{
+        cursor:pointer;
+        font-size:18px;
+        }
 
-.header-left h1{
-margin:0;
-font-size:16px;
-font-weight:600;
-color:white;
-}
+        .form-grid{
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:15px;
+        }
 
-.logo-lcm{
-height:50px;
-}
+        input, textarea{
+        width:100%;
+        padding:8px;
+        border:1px solid #ccc;
+        border-radius:5px;
+        }
 
-/* CONTAINER */
+        textarea{
+        min-height:70px;
+        }
 
-.container{
-max-width:1200px;
-margin:auto;
-padding:30px 20px;
-}
+        .modal-actions{
+        margin-top:20px;
+        text-align:right;
+        }
+    </style>
+  </head>
 
-/* TARJETA PACIENTE */
+  <body>
+    <div class="header">
+      <div class="header-left">
+        <img src="{% static 'images/logo-lcm.png' %}" class="logo-lcm" />
+        <h1>Ficha Paciente</h1>
+      </div>
 
-.card{
-background:white;
-border-radius:10px;
-padding:25px;
-box-shadow:0 3px 10px rgba(0,0,0,0.08);
-margin-bottom:25px;
-}
+      <div>
+        <a href="{% url 'dashboard' %}" class="btn-volver">⬅ Volver</a>
+      </div>
+    </div>
 
-.card h2{
-margin-top:0;
-margin-bottom:20px;
-}
+    <div class="container">
+      <!-- DATOS PACIENTE -->
 
-/* GRID PACIENTE */
+      <div class="card">
+        <h2>{{ paciente.nombre }}</h2>
 
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:15px;
-}
+        <div class="grid">
+          <div class="info">
+            <div class="label">RUT</div>
+            <div class="valor">{{ paciente.rut }}</div>
+          </div>
 
-.info{
-background:#f7f9fb;
-padding:12px;
-border-radius:6px;
-}
+          <div class="info">
+            <div class="label">Edad</div>
+            <div class="valor">{{ paciente.edad }} años</div>
+          </div>
 
-.label{
-font-size:12px;
-color:#777;
-}
+          <div class="info">
+            <div class="label">Teléfono</div>
+            <div class="valor">{{ paciente.telefono }}</div>
+          </div>
 
-.valor{
-font-weight:bold;
-margin-top:4px;
-}
+          <div class="info">
+            <div class="label">Institución</div>
+            <div class="valor">{{ paciente.institucion }}</div>
+          </div>
 
-/* BOTONES */
+          <div class="info">
+            <div class="label">Fecha nacimiento</div>
+            <div class="valor">{{ paciente.fecha_nacimiento }}</div>
+          </div>
+        </div>
 
-.actions{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:20px;
-}
+        {% if paciente.anamnesis %}
+          <div style="margin-top:20px">
+            <b>Anamnesis</b>
 
-.btn{
-padding:10px 16px;
-border:none;
-border-radius:6px;
-cursor:pointer;
-font-weight:bold;
-display:flex;
-align-items:center;
-gap:6px;
-}
+            <p>{{ paciente.anamnesis }}</p>
+          </div>
+        {% endif %}
 
-.btn-nuevo{
-background: #1c7e45;
-color:white;
-}
+        <div class="actions">
+          <button class="btn btn-nuevo">➕ Nueva Evaluación</button>
+          <button class="btn btn-editar" onclick="abrirModal()">✏️ Editar datos</button>
+        </div>
+      </div>
 
+      <!-- HISTORIAL EVALUACIONES -->
 
-/* TABLA EVALUACIONES */
+      <div class="card">
+        <h2>Historial de Evaluaciones</h2>
 
-table{
-width:100%;
-border-collapse:collapse;
-background:white;
-border-radius:8px;
-overflow:hidden;
-}
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Lejos</th>
+              <th>Cerca</th>
+              <th>Observaciones</th>
+            </tr>
+          </thead>
 
-th,td{
-padding:12px;
-text-align:center;
-border-bottom:1px solid #eee;
-}
+          <tbody>
+            {% for e in evaluaciones %}
+              <tr class="fila-evaluacion" onclick="window.location.href='{% url 'ver_receta' e.id %}'">
+                <td>{{ e.fecha }}</td>
 
-th{
-background:#2c3e50;
-color:white;
-font-size:14px;
-}
+                <td>
+                  <div class="receta">
+                    <div>
+                      <b>OD</b> {{ e.lejos_od_esf }} {{ e.lejos_od_cil }} {{ e.lejos_od_eje }}
+                    </div>
 
-tr:hover{
-background:#f5f7fa;
-}
+                    <div>
+                      <b>OI</b> {{ e.lejos_oi_esf }} {{ e.lejos_oi_cil }} {{ e.lejos_oi_eje }}
+                    </div>
+                  </div>
+                </td>
 
-/* RECETA GRID */
+                <td>
+                  <div class="receta">
+                    <div>
+                      <b>OD</b> {{ e.cerca_od_esf }} {{ e.cerca_od_cil }} {{ e.cerca_od_eje }}
+                    </div>
 
-.receta{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:10px;
-font-size:13px;
-}
+                    <div>
+                      <b>OI</b> {{ e.cerca_oi_esf }} {{ e.cerca_oi_cil }} {{ e.cerca_oi_eje }}
+                    </div>
+                  </div>
+                </td>
 
-/* RESPONSIVE */
+                <td>{{ e.observaciones|default:'-' }}</td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="4">No hay evaluaciones registradas</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-@media(max-width:700px){
+<!-- MODAL EDITAR PACIENTE -->
 
-.receta{
-grid-template-columns:1fr;
-}
+<div id="modalEditar" class="modal">
+  <div class="modal-content">
 
-th,td{
-font-size:12px;
-padding:8px;
-}
+    <div class="modal-header">
+      <h3>Editar Paciente</h3>
+      <span class="cerrar" onclick="cerrarModal()">✖</span>
+    </div>
 
-}
+    <form method="POST" action="{% url 'editar_paciente' paciente.id %}">
+      {% csrf_token %}
 
-/* FILAS EVALUACIÓN */
+      <div class="form-grid">
 
-.fila-evaluacion{
-cursor:pointer;
-}
+        <div>
+          <label>Nombre</label>
+          <input type="text" name="nombre" value="{{ paciente.nombre }}" required>
+        </div>
 
-.fila-evaluacion:hover{
-background:#eef3f8;
-}
+        <div>
+          <label>RUT</label>
+          <input type="text" name="rut" value="{{ paciente.rut }}" required>
+        </div>
 
-.btn-volver{
-text-decoration:none;
-background:#ecf0f1;
-padding:8px 14px;
-border-radius:6px;
-color:#2c3e50;
-font-weight:bold;
-}
+        <div>
+          <label>Fecha nacimiento</label>
+          <input type="date" name="fecha_nacimiento" value="{{ paciente.fecha_nacimiento|date:'Y-m-d' }}">
+        </div>
 
-</style>
+        <div>
+          <label>Teléfono</label>
+          <input type="text" name="telefono" value="{{ paciente.telefono }}">
+        </div>
 
-</head>
+        <div>
+          <label>Institución</label>
+          <input type="text" name="institucion" value="{{ paciente.institucion }}">
+        </div>
 
-<body>
+        <div style="grid-column:1/3">
+          <label>Anamnesis</label>
+          <textarea name="anamnesis">{{ paciente.anamnesis }}</textarea>
+        </div>
 
-<div class="header">
+      </div>
 
-<div class="header-left">
-<img src="{% static 'images/logo-lcm.png' %}" class="logo-lcm">
-<h1>Ficha Paciente</h1>
+      <div class="modal-actions">
+        <button type="submit" class="btn btn-nuevo">
+          💾 Guardar cambios
+        </button>
+      </div>
+
+    </form>
+  </div>
 </div>
 
+<script>
 
-<div>
-<a href="{% url 'dashboard' %}" class="btn-volver">⬅ Volver</a>
-</div>
+    function abrirModal(){
+        document.getElementById("modalEditar").style.display="flex"
+    }
 
-</div>
+    function cerrarModal(){
+        document.getElementById("modalEditar").style.display="none"
+    }
 
+</script>
 
-<div class="container">
-
-<!-- DATOS PACIENTE -->
-
-<div class="card">
-
-<h2>{{ paciente.nombre }}</h2>
-
-<div class="grid">
-
-<div class="info">
-<div class="label">RUT</div>
-<div class="valor">{{ paciente.rut }}</div>
-</div>
-
-<div class="info">
-<div class="label">Edad</div>
-<div class="valor">{{ paciente.edad }} años</div>
-</div>
-
-<div class="info">
-<div class="label">Teléfono</div>
-<div class="valor">{{ paciente.telefono }}</div>
-</div>
-
-<div class="info">
-<div class="label">Institución</div>
-<div class="valor">{{ paciente.institucion }}</div>
-</div>
-
-<div class="info">
-<div class="label">Fecha nacimiento</div>
-<div class="valor">{{ paciente.fecha_nacimiento }}</div>
-</div>
-
-</div>
-
-{% if paciente.anamnesis %}
-<div style="margin-top:20px">
-
-<b>Anamnesis</b>
-
-<p>{{ paciente.anamnesis }}</p>
-
-</div>
-{% endif %}
-
-
-<div class="actions">
-
-<button class="btn btn-nuevo">
-➕ Nueva Evaluación
-</button>
-
-</div>
-
-</div>
-
-<!-- HISTORIAL EVALUACIONES -->
-
-<div class="card">
-
-<h2>Historial de Evaluaciones</h2>
-
-<table>
-
-<thead>
-
-<tr>
-<th>Fecha</th>
-<th>Lejos</th>
-<th>Cerca</th>
-<th>Observaciones</th>
-</tr>
-
-</thead>
-
-<tbody>
-
-{% for e in evaluaciones %}
-
-<tr class="fila-evaluacion" onclick="window.location.href='{% url 'ver_receta' e.id %}'">
-
-<td>{{ e.fecha }}</td>
-
-<td>
-
-<div class="receta">
-
-<div><b>OD</b> {{ e.lejos_od_esf }} {{ e.lejos_od_cil }} {{ e.lejos_od_eje }}</div>
-
-<div><b>OI</b> {{ e.lejos_oi_esf }} {{ e.lejos_oi_cil }} {{ e.lejos_oi_eje }}</div>
-
-</div>
-
-</td>
-
-<td>
-
-<div class="receta">
-
-<div><b>OD</b> {{ e.cerca_od_esf }} {{ e.cerca_od_cil }} {{ e.cerca_od_eje }}</div>
-
-<div><b>OI</b> {{ e.cerca_oi_esf }} {{ e.cerca_oi_cil }} {{ e.cerca_oi_eje }}</div>
-
-</div>
-
-</td>
-
-<td>
-
-{{ e.observaciones|default:"-" }}
-
-</td>
-
-</tr>
-
-{% empty %}
-
-<tr>
-
-<td colspan="4">
-No hay evaluaciones registradas
-</td>
-
-</tr>
-
-{% endfor %}
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
-
-</body>
+  </body>
 </html>
