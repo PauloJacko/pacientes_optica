@@ -42,10 +42,16 @@
         color:white;
       }
       
-      .header a {
-        color: #ff6b6b;
-        text-decoration: none;
-        font-weight: bold;
+      .header a{
+        color:#ff6b6b;
+        text-decoration:none;
+        font-weight:bold;
+        transition:all 0.2s ease;
+      }
+
+      .header a:hover{
+        color:#ff3b3b;
+        transform:scale(1.05);
       }
       
       /* CONTENIDO */
@@ -84,9 +90,16 @@
         font-weight: bold;
       }
       
-      .btn-search {
-        background: #3498db;
-        color: white;
+      .btn-search{
+        background:#3498db;
+        color:white;
+        transition:all 0.2s ease;
+      }
+
+      .btn-search:hover{
+        background:#2b7bb9;
+        transform:translateY(-1px);
+        box-shadow:0 3px 6px rgba(0,0,0,0.15);
       }
       
       /* BOTON NUEVO PACIENTE */
@@ -444,6 +457,12 @@
       .btn-ver{
         text-decoration:none;
         font-size:17px;
+        transition:all 0.15s ease;
+        cursor:pointer;
+      }
+
+      .btn-ver:hover{
+        transform:scale(1.25);
       }
 
       .btn-eliminar{
@@ -453,12 +472,13 @@
         padding:6px 10px;
         border-radius:4px;
         cursor:pointer;
-        font-size:14px;
+        font-size:12px;
         transition:0.2s;
       }
 
       .btn-eliminar:hover{
         background:#c0392b;
+        transform:scale(1.25);
       }
     </style>
   </head>
