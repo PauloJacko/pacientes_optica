@@ -3,11 +3,13 @@ from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
+from django.db.models import Max
 from django.core.paginator import Paginator
 
 from usuarios.models import Paciente
 from usuarios.forms import PacienteForm
 from evaluaciones.forms import EvaluacionForm
+from evaluaciones.models import Evaluacion
 
 def login_view(request):
 
@@ -82,3 +84,40 @@ def eliminar_paciente(request, id):
     except Paciente.DoesNotExist:
 
         return JsonResponse({'success': False})
+
+@login_required
+def imprimir_recetas(request):
+
+    pacientes = Paciente.objects.all()
+
+    nombre = request.GET.get('nombre')
+    rut = request.GET.get('rut')
+    institucion = request.GET.get('institucion')
+
+    if nombre:
+        pacientes = pacientes.filter(nombre__icontains=nombre)
+
+    if rut:
+        pacientes = pacientes.filter(rut__icontains=rut)
+
+    if institucion:
+        pacientes = pacientes.filter(institucion__icontains=institucion)
+
+    recetas = []
+
+    for paciente in pacientes:
+
+        evaluacion = Evaluacion.objects.filter(
+            paciente=paciente
+        ).order_by('-fecha').first()
+
+        if evaluacion:
+
+            recetas.append({
+                "paciente": paciente,
+                "evaluacion": evaluacion
+            })
+
+    return render(request, "evaluaciones/receta.html", {
+        "recetas": recetas
+    })

@@ -480,6 +480,56 @@
         background:#c0392b;
         transform:scale(1.25);
       }
+
+      /* BOTONES MODAL ELIMINAR */
+
+      .btn-confirmar1{
+        background: #e74c3c !important;
+        color:white;
+        border:none;
+        padding:10px;
+        border-radius:6px;
+        cursor:pointer;
+        font-weight:bold;
+        transition:all 0.2s ease;
+      }
+
+      .btn-confirmar1:hover{
+        background: #c0392b !important;
+        transform:translateY(-1px);
+        box-shadow:0 3px 6px rgba(0,0,0,0.2);
+      }
+
+      .btn-cancelar1{
+        background: #95a5a6 !important;
+        color:white;
+        border:none;
+        padding:10px;
+        border-radius:6px;
+        cursor:pointer;
+        font-weight:bold;
+        transition:all 0.2s ease;
+      }
+
+      .btn-cancelar1:hover{
+        background: #7f8c8d !important;
+        transform:translateY(-1px);
+        box-shadow:0 3px 6px rgba(0,0,0,0.2);
+      }
+
+      /* BOTON IMPRIMIR RECETAS */
+
+      .btn-print-all{
+        background:#8e44ad;
+        color:white;
+        transition:all 0.2s ease;
+      }
+
+      .btn-print-all:hover{
+        background:#6c3483;
+        transform:translateY(-1px);
+        box-shadow:0 3px 6px rgba(0,0,0,0.15);
+      }
     </style>
   </head>
 
@@ -511,6 +561,10 @@
         <button type="button" class="btn-nuevo" onclick="abrirModalPaciente()">
           <span class="icono">+</span>
           <span class="texto">Nuevo Paciente</span>
+        </button>
+
+        <button type="button" class="btn-print-all" onclick="imprimirRecetas()">
+          🖨 Imprimir recetas
         </button>
       </form>
 
@@ -693,14 +747,14 @@
               <button 
                 type="button"
                 onclick="confirmarEliminar()"
-                style="background:#e74c3c">
+                class="btn-confirmar1">
                 Eliminar
               </button>
 
               <button 
                 type="button"
                 onclick="cerrarModalEliminar()"
-                style="background:#95a5a6">
+                class="btn-cancelar1">
                 Cancelar
               </button>
 
@@ -857,6 +911,18 @@
         })
 
       }
+
+        function imprimirRecetas(){
+
+          const nombre = document.querySelector("input[name='nombre']").value
+          const rut = document.querySelector("input[name='rut']").value
+          const institucion = document.querySelector("input[name='institucion']").value
+
+          let url = `/recetas/imprimir/?nombre=${nombre}&rut=${rut}&institucion=${institucion}`
+
+          window.open(url, "_blank")
+
+        }
       </script>
     </div>
   </body>
