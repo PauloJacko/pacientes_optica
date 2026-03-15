@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404, render
 from .forms import EvaluacionForm
@@ -28,11 +29,16 @@ def crear_evaluacion(request, paciente_id):
         'errors': form.errors
     })
 
+@login_required
 def ver_receta(request, evaluacion_id):
 
     evaluacion = get_object_or_404(Evaluacion, id=evaluacion_id)
 
+    recetas = [{
+        "paciente": evaluacion.paciente,
+        "evaluacion": evaluacion
+    }]
+
     return render(request, "evaluaciones/receta.html", {
-        "evaluacion": evaluacion,
-        "paciente": evaluacion.paciente
+        "recetas": recetas
     })

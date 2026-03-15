@@ -209,16 +209,17 @@
     </style>
   </head>
 
-  <body>
-    <div class="actions">
-      <button class="btn btn-print" onclick="window.print()">🖨 Imprimir</button>
-    </div>
+<body>
 
-    {% for item in recetas %}
+<div class="actions">
+  <button class="btn btn-print" onclick="window.print()">🖨 Imprimir</button>
+</div>
 
-    {% with paciente=item.paciente evaluacion=item.evaluacion %}
+{% for item in recetas %}
 
-    <div class="receta-hoja">
+{% with paciente=item.paciente evaluacion=item.evaluacion %}
+
+<div class="receta-hoja">
 
       <!-- HEADER -->
 
@@ -357,9 +358,11 @@
         Serrano 73, oficina 309.<br />
         Teléfono: +56988037117
       </div>
+
     </div>
 
 {% endwith %}
 {% endfor %}
-  </body>
+
+</body>
 </html>
