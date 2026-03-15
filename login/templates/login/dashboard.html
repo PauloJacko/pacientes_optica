@@ -23,35 +23,35 @@
         justify-content: space-between;
         align-items: center;
       }
-
-      .header-left{
-        display:flex;
-        align-items:center;
-        gap:14px;
-      }
-
-      .logo-lcm{
-        height:50px;
-        object-fit:contain;
-      }
-
-      .header-left h1{
-        margin:0;
-        font-size:16px;
-        font-weight:600;
-        color:white;
+      
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
       }
       
-      .header a{
-        color:#ff6b6b;
-        text-decoration:none;
-        font-weight:bold;
-        transition:all 0.2s ease;
+      .logo-lcm {
+        height: 50px;
+        object-fit: contain;
       }
-
-      .header a:hover{
-        color:#ff3b3b;
-        transform:scale(1.05);
+      
+      .header-left h1 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: white;
+      }
+      
+      .header a {
+        color: #ff6b6b;
+        text-decoration: none;
+        font-weight: bold;
+        transition: all 0.2s ease;
+      }
+      
+      .header a:hover {
+        color: #ff3b3b;
+        transform: scale(1.05);
       }
       
       /* CONTENIDO */
@@ -90,16 +90,16 @@
         font-weight: bold;
       }
       
-      .btn-search{
-        background:#3498db;
-        color:white;
-        transition:all 0.2s ease;
+      .btn-search {
+        background: #3498db;
+        color: white;
+        transition: all 0.2s ease;
       }
-
-      .btn-search:hover{
-        background:#2b7bb9;
-        transform:translateY(-1px);
-        box-shadow:0 3px 6px rgba(0,0,0,0.15);
+      
+      .btn-search:hover {
+        background: #2b7bb9;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
       }
       
       /* BOTON NUEVO PACIENTE */
@@ -274,17 +274,18 @@
       /* BODY MODAL */
       
       .modal-body {
-        padding: 20px;
+        padding: 22px;
         overflow-y: auto;
       }
       
       /* FORM */
       
-      .modal input,
-      .modal textarea {
-        width: 100%;
-        margin-bottom: 10px;
-      }
+        .modal input,
+        .modal textarea {
+          width: 100%;
+          margin-bottom: 10px;
+          box-sizing: border-box;
+        }
       
       /* BOTONES */
       
@@ -322,6 +323,15 @@
         border-collapse: collapse;
         margin-bottom: 18px;
         font-size: 14px;
+      }
+
+      .tabla-scroll {
+        width: 100%;
+        overflow-x: auto;
+      }
+
+      .tabla-receta {
+        min-width: 500px;
       }
       
       .tabla-receta thead th {
@@ -421,123 +431,138 @@
       /* RESPONSIVE */
       
       @media (max-width: 700px) {
-        table thead {
+
+        table:not(.tabla-receta) thead {
           display: none;
         }
-      
-        table,
-        table tbody,
-        table tr,
-        table td {
+
+        table:not(.tabla-receta),
+        table:not(.tabla-receta) tbody,
+        table:not(.tabla-receta) tr,
+        table:not(.tabla-receta) td {
           display: block;
           width: 100%;
         }
-      
-        table tr {
-          margin-bottom: 15px;
-          background: white;
-          border-radius: 8px;
-          padding: 10px;
-        }
-      
-        table td {
-          border: none;
-          padding: 5px 0;
-        }
-      }
 
+      }
+      
       /* ACCIONES TABLA */
-
-      .acciones{
-        display:flex;
-        gap:20px;
-        align-items:center;
+      
+      .acciones {
+        display: flex;
+        gap: 20px;
+        align-items: center;
       }
-
-      .btn-ver{
-        text-decoration:none;
-        font-size:17px;
-        transition:all 0.15s ease;
-        cursor:pointer;
+      
+      .btn-ver {
+        text-decoration: none;
+        font-size: 17px;
+        transition: all 0.15s ease;
+        cursor: pointer;
       }
-
-      .btn-ver:hover{
-        transform:scale(1.25);
+      
+      .btn-ver:hover {
+        transform: scale(1.25);
       }
-
-      .btn-eliminar{
-        background:#e74c3c;
-        color:white;
-        border:none;
-        padding:6px 10px;
-        border-radius:4px;
-        cursor:pointer;
-        font-size:12px;
-        transition:0.2s;
+      
+      .btn-eliminar {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: 0.2s;
       }
-
-      .btn-eliminar:hover{
-        background:#c0392b;
-        transform:scale(1.25);
+      
+      .btn-eliminar:hover {
+        background: #c0392b;
+        transform: scale(1.25);
       }
-
+      
       /* BOTONES MODAL ELIMINAR */
-
-      .btn-confirmar1{
+      
+      .btn-confirmar1 {
         background: #e74c3c !important;
-        color:white;
-        border:none;
-        padding:10px;
-        border-radius:6px;
-        cursor:pointer;
-        font-weight:bold;
-        transition:all 0.2s ease;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.2s ease;
       }
-
-      .btn-confirmar1:hover{
+      
+      .btn-confirmar1:hover {
         background: #c0392b !important;
-        transform:translateY(-1px);
-        box-shadow:0 3px 6px rgba(0,0,0,0.2);
+        transform: translateY(-1px);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
       }
-
-      .btn-cancelar1{
+      
+      .btn-cancelar1 {
         background: #95a5a6 !important;
-        color:white;
-        border:none;
-        padding:10px;
-        border-radius:6px;
-        cursor:pointer;
-        font-weight:bold;
-        transition:all 0.2s ease;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.2s ease;
       }
-
-      .btn-cancelar1:hover{
+      
+      .btn-cancelar1:hover {
         background: #7f8c8d !important;
-        transform:translateY(-1px);
-        box-shadow:0 3px 6px rgba(0,0,0,0.2);
+        transform: translateY(-1px);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
       }
-
+      
       /* BOTON IMPRIMIR RECETAS */
 
-      .btn-print-all{
-        background:#8e44ad;
-        color:white;
-        transition:all 0.2s ease;
+      .btn-print-all {
+        display: flex;
+        align-items: center;
+        width: 45px;
+        height: 40px;
+        background: #8e44ad;
+        color: white;
+        border-radius: 20px;
+        border: none;
+        overflow: hidden;
+        transition: 0.3s;
+        margin-left: 5px;
       }
 
-      .btn-print-all:hover{
-        background:#6c3483;
-        transform:translateY(-1px);
-        box-shadow:0 3px 6px rgba(0,0,0,0.15);
+      .btn-print-all .icono {
+        width: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+      }
+
+      .btn-print-all .texto {
+        white-space: nowrap;
+        opacity: 0;
+        padding-right: 12px;
+        transition: 0.2s;
+      }
+
+      .btn-print-all:hover {
+        width: 190px;
+        background: #6c3483;
+      }
+
+      .btn-print-all:hover .texto {
+        opacity: 1;
       }
     </style>
   </head>
 
   <body>
     <div class="header">
-
       <div class="header-left">
-        <img src="{% static 'images/logo-lcm.png' %}" class="logo-lcm" alt="LCM">
+        <img src="{% static 'images/logo-lcm.png' %}" class="logo-lcm" alt="LCM" />
         <h1>Sistema - Óptica LCM</h1>
       </div>
 
@@ -545,14 +570,13 @@
         Bienvenido {{ request.user.username }} |
         <a href="{% url 'logout' %}">Cerrar sesión</a>
       </div>
-
     </div>
 
     <div class="container">
       <form method="GET" class="top-bar">
         <input type="text" name="nombre" placeholder="Buscar por nombre" value="{{ request.GET.nombre }}" />
 
-        <input type="text" id="rut_busqueda" name="rut" placeholder="Buscar por RUT" value="{{ request.GET.rut }}"/>
+        <input type="text" id="rut_busqueda" name="rut" placeholder="Buscar por RUT" value="{{ request.GET.rut }}" />
 
         <input type="text" name="institucion" placeholder="Buscar por institución" value="{{ request.GET.institucion }}" />
 
@@ -564,7 +588,8 @@
         </button>
 
         <button type="button" class="btn-print-all" onclick="imprimirRecetas()">
-          🖨 Imprimir recetas
+          <span class="icono">🖨</span>
+          <span class="texto">Imprimir recetas</span>
         </button>
       </form>
 
@@ -654,7 +679,8 @@
 
               <h3>Lejos</h3>
 
-              <table class="tabla-receta">
+              <div class="tabla-scroll">
+                <table class="tabla-receta">
                 <thead>
                   <tr>
                     <th></th>
@@ -683,10 +709,12 @@
                   </tr>
                 </tbody>
               </table>
+              </div>
 
               <h3>Cerca</h3>
 
-              <table class="tabla-receta">
+              <div class="tabla-scroll">
+                <table class="tabla-receta">
                 <thead>
                   <tr>
                     <th></th>
@@ -715,6 +743,7 @@
                   </tr>
                 </tbody>
               </table>
+            </div>
 
               <div class="observaciones">
                 <label>ADD / Observaciones</label>
@@ -732,36 +761,20 @@
 
       <div id="modalEliminar" class="modal">
         <div class="modal-content" style="max-width:420px">
-
           <div class="modal-header">
             <h2>Eliminar paciente</h2>
             <span class="modal-close" onclick="cerrarModalEliminar()">✕</span>
           </div>
 
           <div class="modal-body">
-
             <p id="textoEliminar" style="margin-bottom:20px"></p>
 
             <div style="display:flex; gap:10px">
+              <button type="button" onclick="confirmarEliminar()" class="btn-confirmar1">Eliminar</button>
 
-              <button 
-                type="button"
-                onclick="confirmarEliminar()"
-                class="btn-confirmar1">
-                Eliminar
-              </button>
-
-              <button 
-                type="button"
-                onclick="cerrarModalEliminar()"
-                class="btn-cancelar1">
-                Cancelar
-              </button>
-
+              <button type="button" onclick="cerrarModalEliminar()" class="btn-cancelar1">Cancelar</button>
             </div>
-
           </div>
-
         </div>
       </div>
 
@@ -843,15 +856,15 @@
         function formatearRutInput(input) {
           input.addEventListener('input', function () {
             let valor = this.value.replace(/[^0-9kK]/g, '').toUpperCase()
-
+        
             if (valor.length <= 1) {
               this.value = valor
               return
             }
-
+        
             let cuerpo = valor.slice(0, -1)
             let dv = valor.slice(-1)
-
+        
             cuerpo = cuerpo
               .split('')
               .reverse()
@@ -861,67 +874,59 @@
               .split('')
               .reverse()
               .join('')
-
+        
             this.value = cuerpo + '-' + dv
           })
         }
-
+        
         const rutPaciente = document.getElementById('rut_input')
         const rutBusqueda = document.getElementById('rut_busqueda')
-
+        
         if (rutPaciente) formatearRutInput(rutPaciente)
         if (rutBusqueda) formatearRutInput(rutBusqueda)
-
-      let pacienteEliminarId = null
-
-      const modalEliminar = document.getElementById("modalEliminar")
-      const textoEliminar = document.getElementById("textoEliminar")
-
-      function abrirModalEliminar(id, nombre){
-
-        pacienteEliminarId = id
-
-        textoEliminar.innerHTML =
-          "¿Seguro que deseas eliminar al paciente <b>" + nombre + "</b> ?<br><br>Esta acción no se puede deshacer."
-
-        modalEliminar.style.display = "flex"
-      }
-
-      function cerrarModalEliminar(){
-        modalEliminar.style.display = "none"
-      }
-
-      function confirmarEliminar(){
-
-        fetch(`/pacientes/eliminar/${pacienteEliminarId}/`,{
-          method:"POST",
-          headers:{
-            "X-CSRFToken": getCookie("csrftoken")
-          }
-        })
-        .then(r=>r.json())
-        .then(data=>{
-
-          if(data.success){
-            location.reload()
-          }else{
-            alert("Error al eliminar")
-          }
-
-        })
-
-      }
-
-        function imprimirRecetas(){
-
+        
+        let pacienteEliminarId = null
+        
+        const modalEliminar = document.getElementById('modalEliminar')
+        const textoEliminar = document.getElementById('textoEliminar')
+        
+        function abrirModalEliminar(id, nombre) {
+          pacienteEliminarId = id
+        
+          textoEliminar.innerHTML = '¿Seguro que deseas eliminar al paciente <b>' + nombre + '</b> ?<br><br>Esta acción no se puede deshacer.'
+        
+          modalEliminar.style.display = 'flex'
+        }
+        
+        function cerrarModalEliminar() {
+          modalEliminar.style.display = 'none'
+        }
+        
+        function confirmarEliminar() {
+          fetch(`/pacientes/eliminar/${pacienteEliminarId}/`, {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': getCookie('csrftoken')
+            }
+          })
+            .then((r) => r.json())
+            .then((data) => {
+              if (data.success) {
+                location.reload()
+              } else {
+                alert('Error al eliminar')
+              }
+            })
+        }
+        
+        function imprimirRecetas() {
           const nombre = document.querySelector("input[name='nombre']").value
           const rut = document.querySelector("input[name='rut']").value
           const institucion = document.querySelector("input[name='institucion']").value
-
+        
           let url = `/recetas/imprimir/?nombre=${nombre}&rut=${rut}&institucion=${institucion}`
-
-          window.open(url, "_blank")
-
+        
+          window.open(url, '_blank')
         }
       </script>
     </div>

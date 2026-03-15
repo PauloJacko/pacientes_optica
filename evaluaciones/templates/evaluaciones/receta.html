@@ -24,7 +24,7 @@
         margin: auto;
         background: white;
         padding: 40px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        box-shadow: none;
       }
       
       /* HEADER */
@@ -159,17 +159,34 @@
       }
       
       .btn {
-        padding: 10px 20px;
+        padding: 10px 22px;
         border: none;
-        border-radius: 6px;
+        border-radius: 8px;
         cursor: pointer;
         font-weight: bold;
         margin: 5px;
+        font-size: 14px;
       }
       
       .btn-print {
         background: #1c7e45;
         color: white;
+        transition: all 0.25s ease;
+      }
+
+      /* HOVER */
+
+      .btn-print:hover {
+        background: #239b56;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+      }
+
+      /* CLICK */
+
+      .btn-print:active {
+        transform: translateY(0);
+        box-shadow: 0 3px 6px rgba(0,0,0,0.15);
       }
       
       /* IMPRESION */
@@ -186,15 +203,14 @@
         body {
           background: white;
           padding: 0;
+          margin: 0;
         }
       
         .receta-hoja {
-          max-width: 700px;
-          margin: auto;
-          background: white;
-          padding: 40px;
-          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-          page-break-after: always;
+          width: auto;
+          margin: 0;
+          padding: 10mm;
+          box-shadow: none;
         }
       
         .firma {
@@ -209,160 +225,156 @@
     </style>
   </head>
 
-<body>
-
-<div class="actions">
-  <button class="btn btn-print" onclick="window.print()">🖨 Imprimir</button>
-</div>
-
-{% for item in recetas %}
-
-{% with paciente=item.paciente evaluacion=item.evaluacion %}
-
-<div class="receta-hoja">
-
-      <!-- HEADER -->
-
-      <div class="receta-header">
-        <a href="{% url 'ficha_paciente' paciente.id %}" class="btn-volver no-print">←</a>
-
-        <img src="{% static 'images/logo-lcm.png' %}" class="logo" />
-
-        <div class="titulo">RECETA ÓPTICA</div>
-      </div>
-
-      <!-- DATOS PACIENTE -->
-
-      <div class="datos">
-        <div class="datos-grid">
-          <div class="dato">
-            <span class="label">Nombre:</span>
-            {{ paciente.nombre }}
-          </div>
-
-          <div class="dato">
-            <span class="label">RUT:</span>
-            {{ paciente.rut }}
-          </div>
-
-          <div class="dato">
-            <span class="label">Edad:</span>
-            {{ paciente.edad }} años
-          </div>
-
-          <div class="dato">
-            <span class="label">Fecha:</span>
-            {{ evaluacion.fecha|date:'d \\d\\e F \\d\\e Y' }}
-          </div>
-        </div>
-      </div>
-
-      <!-- LEJOS -->
-
-      <h3>Visión Lejana</h3>
-
-      <table class="tabla-receta">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Esférico</th>
-            <th>Cilíndrico</th>
-            <th>Eje</th>
-            <th>DP</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr>
-            <td>
-              <b>OD</b>
-            </td>
-
-            <td>{{ evaluacion.lejos_od_esf }}</td>
-            <td>{{ evaluacion.lejos_od_cil }}</td>
-            <td>{{ evaluacion.lejos_od_eje }}</td>
-            <td>{{ evaluacion.lejos_od_dp }}</td>
-          </tr>
-
-          <tr>
-            <td>
-              <b>OI</b>
-            </td>
-
-            <td>{{ evaluacion.lejos_oi_esf }}</td>
-            <td>{{ evaluacion.lejos_oi_cil }}</td>
-            <td>{{ evaluacion.lejos_oi_eje }}</td>
-            <td>{{ evaluacion.lejos_oi_dp }}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- CERCA -->
-
-      <h3>Visión Cercana</h3>
-
-      <table class="tabla-receta">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Esférico</th>
-            <th>Cilíndrico</th>
-            <th>Eje</th>
-            <th>DP</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr>
-            <td>
-              <b>OD</b>
-            </td>
-
-            <td>{{ evaluacion.cerca_od_esf }}</td>
-            <td>{{ evaluacion.cerca_od_cil }}</td>
-            <td>{{ evaluacion.cerca_od_eje }}</td>
-            <td>{{ evaluacion.cerca_od_dp }}</td>
-          </tr>
-
-          <tr>
-            <td>
-              <b>OI</b>
-            </td>
-
-            <td>{{ evaluacion.cerca_oi_esf }}</td>
-            <td>{{ evaluacion.cerca_oi_cil }}</td>
-            <td>{{ evaluacion.cerca_oi_eje }}</td>
-            <td>{{ evaluacion.cerca_oi_dp }}</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- OBSERVACIONES -->
-
-      <div class="observaciones">
-        <b>ADD</b>
-
-        <div class="observaciones-box">{{ evaluacion.observaciones }}</div>
-      </div>
-
-      <!-- FIRMA -->
-
-      <div class="firma">
-        <div class="linea"></div>Firma
-      </div>
-
-      <!-- FOOTER EMPRESA -->
-
-      <div class="footer">
-        www.serviciosopticoslcm.cl<br />
-        Serrano 73, oficina 309.<br />
-        Teléfono: +56988037117
-      </div>
-
+  <body>
+    <div class="actions">
+      <button class="btn btn-print" onclick="window.print()">🖨 Imprimir</button>
     </div>
 
-{% endwith %}
-{% endfor %}
+    {% for item in recetas %}
+      {% with paciente=item.paciente evaluacion=item.evaluacion %}
+        <div class="receta-hoja">
+          <!-- HEADER -->
 
-</body>
+          <div class="receta-header">
+            <a href="{% url 'ficha_paciente' paciente.id %}" class="btn-volver no-print">←</a>
+
+            <img src="{% static 'images/logo-lcm.png' %}" class="logo" />
+
+            <div class="titulo">RECETA ÓPTICA</div>
+          </div>
+
+          <!-- DATOS PACIENTE -->
+
+          <div class="datos">
+            <div class="datos-grid">
+              <div class="dato">
+                <span class="label">Nombre:</span>
+                {{ paciente.nombre }}
+              </div>
+
+              <div class="dato">
+                <span class="label">RUT:</span>
+                {{ paciente.rut }}
+              </div>
+
+              <div class="dato">
+                <span class="label">Edad:</span>
+                {{ paciente.edad }} años
+              </div>
+
+              <div class="dato">
+                <span class="label">Fecha:</span>
+                {{ evaluacion.fecha|date:'d \\d\\e F \\d\\e Y' }}
+              </div>
+            </div>
+          </div>
+
+          <!-- LEJOS -->
+
+          <h3>Visión Lejana</h3>
+
+          <table class="tabla-receta">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Esférico</th>
+                <th>Cilíndrico</th>
+                <th>Eje</th>
+                <th>DP</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>
+                  <b>OD</b>
+                </td>
+
+                <td>{{ evaluacion.lejos_od_esf }}</td>
+                <td>{{ evaluacion.lejos_od_cil }}</td>
+                <td>{{ evaluacion.lejos_od_eje }}</td>
+                <td>{{ evaluacion.lejos_od_dp }}</td>
+              </tr>
+
+              <tr>
+                <td>
+                  <b>OI</b>
+                </td>
+
+                <td>{{ evaluacion.lejos_oi_esf }}</td>
+                <td>{{ evaluacion.lejos_oi_cil }}</td>
+                <td>{{ evaluacion.lejos_oi_eje }}</td>
+                <td>{{ evaluacion.lejos_oi_dp }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- CERCA -->
+
+          <h3>Visión Cercana</h3>
+
+          <table class="tabla-receta">
+            <thead>
+              <tr>
+                <th></th>
+                <th>Esférico</th>
+                <th>Cilíndrico</th>
+                <th>Eje</th>
+                <th>DP</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>
+                  <b>OD</b>
+                </td>
+
+                <td>{{ evaluacion.cerca_od_esf }}</td>
+                <td>{{ evaluacion.cerca_od_cil }}</td>
+                <td>{{ evaluacion.cerca_od_eje }}</td>
+                <td>{{ evaluacion.cerca_od_dp }}</td>
+              </tr>
+
+              <tr>
+                <td>
+                  <b>OI</b>
+                </td>
+
+                <td>{{ evaluacion.cerca_oi_esf }}</td>
+                <td>{{ evaluacion.cerca_oi_cil }}</td>
+                <td>{{ evaluacion.cerca_oi_eje }}</td>
+                <td>{{ evaluacion.cerca_oi_dp }}</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- OBSERVACIONES -->
+
+          <div class="observaciones">
+            <b>ADD</b>
+
+            <div class="observaciones-box">{{ evaluacion.observaciones }}</div>
+          </div>
+
+          <!-- FIRMA -->
+
+          <div class="firma">
+            <div class="linea"></div>Firma
+          </div>
+
+          <!-- FOOTER EMPRESA -->
+
+          <div class="footer">
+            www.serviciosopticoslcm.cl<br />
+            Serrano 73, oficina 309.<br />
+            Teléfono: +56988037117
+          </div>
+        </div>
+        {% if not forloop.last %}
+          <div style="page-break-after:always;"></div>
+        {% endif %}
+      {% endwith %}
+    {% endfor %}
+  </body>
 </html>
