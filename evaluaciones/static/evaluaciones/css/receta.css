@@ -1,0 +1,211 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f9;
+    padding: 30px;
+}
+
+/* HOJA */
+
+.receta-hoja {
+    max-width: 700px;
+    margin: auto;
+    background: white;
+    padding: 40px;
+    box-shadow: none;
+}
+
+/* HEADER */
+
+.receta-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.titulo {
+    font-size: 26px;
+    font-weight: bold;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.logo {
+    height: 60px;
+}
+
+.btn-volver {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    text-decoration: none;
+    font-size: 20px;
+    color: #2c3e50;
+    margin-right: 10px;
+    transition: background 0.2s;
+}
+
+.btn-volver:hover {
+    background: #e9eef5;
+}
+
+/* DATOS PACIENTE */
+
+.datos {
+    margin-bottom: 25px;
+}
+
+.datos-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    justify-items: center;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.dato {
+    font-size: 14px;
+    width: 100%;
+}
+
+.label {
+    font-weight: bold;
+}
+
+/* TABLA RECETA */
+
+.tabla-receta {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 25px;
+}
+
+.tabla-receta th,
+.tabla-receta td {
+    border: 1px solid #000;
+    padding: 10px;
+    text-align: center;
+}
+
+.tabla-receta th {
+    background: #f3f3f3;
+}
+
+/* OBSERVACIONES */
+
+.observaciones {
+    margin-bottom: 50px;
+}
+
+.observaciones-box {
+    border: 1px solid #000;
+    padding: 15px;
+    margin-top: 15px;
+    min-height: 60px;
+}
+
+/* FIRMA */
+
+.firma {
+    margin-top: 110px;
+    text-align: center;
+}
+
+.linea {
+    border-top: 1px solid #000;
+    width: 250px;
+    margin: auto;
+    margin-bottom: 5px;
+}
+
+/* FOOTER */
+
+.footer {
+    margin-top: 60px;
+    padding-top: 15px;
+    border-top: 1px solid #999;
+    text-align: center;
+    font-size: 13px;
+    color: #444;
+}
+
+/* BOTONES */
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 10px 22px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 5px;
+    font-size: 14px;
+}
+
+.btn-print {
+    background: #1c7e45;
+    color: white;
+    transition: all 0.25s ease;
+}
+
+/* HOVER */
+
+.btn-print:hover {
+    background: #239b56;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+}
+
+/* CLICK */
+
+.btn-print:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* IMPRESION */
+
+@media print {
+    .actions {
+        display: none;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+        padding: 0;
+        margin: 0;
+    }
+
+    .receta-hoja {
+        width: auto;
+        margin: 0;
+        padding: 10mm;
+        box-shadow: none;
+    }
+
+    .firma {
+        margin-top: 80px;
+    }
+}
+
+@page {
+    size: A4;
+    margin: 12mm;
+}

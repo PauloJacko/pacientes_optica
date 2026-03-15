@@ -1,0 +1,417 @@
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f9;
+}
+
+/* HEADER */
+
+.header {
+    background: #1e2a38;
+    color: white;
+    padding: 15px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.header-left h1 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+}
+
+.logo-lcm {
+    height: 50px;
+}
+
+/* CONTAINER */
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px 20px;
+}
+
+/* TARJETA PACIENTE */
+
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    margin-bottom: 25px;
+}
+
+.card h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+/* GRID PACIENTE */
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+}
+
+.info {
+    background: #f7f9fb;
+    padding: 12px;
+    border-radius: 6px;
+}
+
+.label {
+    font-size: 12px;
+    color: #777;
+}
+
+.valor {
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+/* BOTONES */
+
+.actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-nuevo {
+    background: #1c7e45;
+    color: white;
+}
+
+.btn-editar {
+    background: #2980b9;
+    color: white;
+}
+
+/* TABLA */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    background: #2c3e50;
+    color: white;
+    font-size: 14px;
+}
+
+tr:hover {
+    background: #f5f7fa;
+}
+
+/* RECETA GRID */
+
+.receta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    font-size: 13px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width:700px) {
+
+    .receta {
+        grid-template-columns: 1fr;
+    }
+
+    th,
+    td {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+}
+
+/* FILAS */
+
+.fila-evaluacion {
+    cursor: pointer;
+}
+
+.fila-evaluacion:hover {
+    background: #eef3f8;
+}
+
+/* BOTON VOLVER */
+
+.btn-volver {
+    text-decoration: none;
+    background: #ecf0f1;
+    padding: 8px 14px;
+    border-radius: 6px;
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+/* ========================= */
+/* HOVER BOTONES */
+/* ========================= */
+
+.btn,
+.btn-volver {
+    transition: all 0.2s ease;
+}
+
+/* BOTON NUEVA EVALUACION */
+
+.btn-nuevo:hover {
+    background: #166638;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* BOTON EDITAR */
+
+.btn-editar:hover {
+    background: #1f6a99;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* BOTON VOLVER */
+
+.btn-volver:hover {
+    background: #dfe6e9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* CLICK (FEEDBACK) */
+
+.btn:active,
+.btn-volver:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* ========================= */
+/* MODAL BASE */
+/* ========================= */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* ========================= */
+/* MODAL EDITAR PACIENTE */
+/* ========================= */
+
+.modal-editar .modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    width: 500px;
+    max-width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-editar .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.modal-editar label {
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.modal-editar input,
+.modal-editar textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.modal-editar textarea {
+    min-height: 70px;
+}
+
+.modal-editar .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.modal-editar .modal-actions {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.modal-editar .modal-actions button {
+    width: auto;
+}
+
+/* ========================= */
+/* MODAL EVALUACION */
+/* ========================= */
+
+.modal-evaluacion .modal-content {
+    background: white;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-evaluacion .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    font-weight: bold;
+}
+
+.modal-evaluacion .modal-body {
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* TABLA RECETA */
+
+.tabla-receta {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 18px;
+    font-size: 14px;
+}
+
+.tabla-receta thead th {
+    background: #2c3e50;
+    color: white;
+    padding: 8px;
+    text-align: center;
+}
+
+.tabla-receta td {
+    padding: 6px;
+    text-align: center;
+    border-bottom: 1px solid #e6e6e6;
+}
+
+.ojo {
+    font-weight: bold;
+    background: #f7f9fc;
+    width: 50px;
+}
+
+/* INPUTS RECETA */
+
+.modal-evaluacion input {
+    width: 70px;
+    padding: 6px;
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.modal-evaluacion input:focus {
+    outline: none;
+    border-color: #2c7be5;
+    box-shadow: 0 0 0 2px rgba(44, 123, 229, 0.15);
+}
+
+/* OBSERVACIONES */
+
+.observaciones textarea {
+    width: 100%;
+    min-height: 70px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* BOTON GUARDAR */
+
+.btn-guardar-receta {
+    margin-top: 15px;
+    width: 100%;
+    padding: 12px;
+    background: #1faa59;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-guardar-receta:hover {
+    background: #188c47;
+}
+
+.cerrar,
+.modal-close {
+    cursor: pointer;
+    font-size: 20px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    color: #555;
+    user-select: none;
+    transition: 0.2s;
+}
+
+.cerrar:hover,
+.modal-close:hover {
+    background: #f1f1f1;
+    color: #000;
+}
