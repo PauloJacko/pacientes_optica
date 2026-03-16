@@ -11,6 +11,9 @@ from usuarios.forms import PacienteForm
 from evaluaciones.forms import EvaluacionForm
 from evaluaciones.models import Evaluacion
 
+from django.utils.timezone import now
+from django.db.models import Count
+
 def login_view(request):
 
     if request.method == 'POST':
@@ -59,10 +62,41 @@ def dashboard(request):
     paciente_form = PacienteForm()
     evaluacion_form = EvaluacionForm()
 
+    # -----------------------------
+    # MÉTRICAS PARA DASHBOARD EMPRESA
+    # -----------------------------
+
+    mes_actual = now().month
+    anio_actual = now().year
+
+    # pacientes creados este mes
+    pacientes_mes = Paciente.objects.filter(
+        fecha_creacion__month=mes_actual,
+        fecha_creacion__year=anio_actual
+    ).count()
+
+    # total evaluaciones en el sistema
+    evaluaciones_total = Evaluacion.objects.count()
+
+    # instituciones distintas atendidas este mes
+    instituciones_mes = Paciente.objects.filter(
+        fecha_creacion__month=mes_actual,
+        fecha_creacion__year=anio_actual
+    ).values('institucion').exclude(institucion__isnull=True).exclude(institucion="").distinct().count()
+
+    # -----------------------------
+    # ENVÍO DE DATOS AL TEMPLATE
+    # -----------------------------
+
     return render(request, 'login/dashboard.html', {
         'pacientes': pacientes,
         'paciente_form': paciente_form,
-        'evaluacion_form': evaluacion_form
+        'evaluacion_form': evaluacion_form,
+
+        # métricas
+        'pacientes_mes': pacientes_mes,
+        'evaluaciones_total': evaluaciones_total,
+        'instituciones_mes': instituciones_mes
     })
 
 
@@ -120,4 +154,25 @@ def imprimir_recetas(request):
 
     return render(request, "evaluaciones/receta.html", {
         "recetas": recetas
+    })
+
+@login_required
+def dashboard_empresa(request):
+
+    mes_actual = now().month
+    anio_actual = now().year
+
+    pacientes_mes = Paciente.objects.filter(
+        fecha_creacion__month=mes_actual,
+        fecha_creacion__year=anio_actual
+    ).count()
+
+    evaluaciones_total = Evaluacion.objects.count()
+
+    instituciones_mes = Paciente.objects.values('institucion').distinct().count()
+
+    return render(request, 'login/dashboard_empresa.html', {
+        'pacientes_mes': pacientes_mes,
+        'evaluaciones_total': evaluaciones_total,
+        'instituciones_mes': instituciones_mes
     })

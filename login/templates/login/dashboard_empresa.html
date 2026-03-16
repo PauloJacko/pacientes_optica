@@ -1,0 +1,99 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Dashboard Empresa - Óptica</title>
+
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+  <link rel="stylesheet" href="{% static 'css/dashboard_empresa.css' %}">
+</head>
+
+<body>
+
+  <!-- HEADER -->
+
+  <div class="header">
+
+
+<div class="header-left">
+  <img src="{% static 'images/logo-lcm.png' %}" class="logo-lcm" alt="LCM">
+  <h1>Sistema - Óptica LCM</h1>
+</div>
+
+<div class="header-tabs">
+  <a href="{% url 'dashboard' %}"
+     class="tab {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+     👥 Pacientes
+  </a>
+
+  <a href="{% url 'dashboard_empresa' %}"
+     class="tab {% if request.resolver_match.url_name == 'dashboard_empresa' %}active{% endif %}">
+     📊 Empresa
+  </a>
+</div>
+
+<div class="header-user">
+  Bienvenido {{ request.user.username }} |
+  <a href="{% url 'logout' %}" class="logout-link">Cerrar sesión</a>
+</div>
+
+  </div>
+
+  <!-- CONTENIDO -->
+
+  <div class="empresa-container">
+
+```
+<div class="empresa-header">
+  <h2>Panel Empresarial</h2>
+  <p>Resumen de actividad del sistema</p>
+</div>
+
+<!-- CARDS -->
+
+<div class="empresa-cards">
+
+  <div class="empresa-card">
+    <div class="card-title">Pacientes este mes</div>
+    <div class="card-value">{{ pacientes_mes }}</div>
+  </div>
+
+  <div class="empresa-card">
+    <div class="card-title">Instituciones atendidas</div>
+    <div class="card-value">{{ instituciones_mes }}</div>
+  </div>
+
+  <div class="empresa-card">
+    <div class="card-title">Evaluaciones totales</div>
+    <div class="card-value">{{ evaluaciones_total }}</div>
+  </div>
+
+</div>
+
+<!-- ESPACIO PARA FUTUROS GRÁFICOS -->
+
+<div class="empresa-panel">
+
+  <div class="panel-card">
+    <h3>Actividad del sistema</h3>
+    <p>Aquí podrás agregar gráficos de pacientes por mes, instituciones atendidas y estadísticas.</p>
+  </div>
+
+  <div class="panel-card">
+    <h3>Información general</h3>
+    <p>Este panel puede mostrar métricas importantes de la óptica.</p>
+  </div>
+
+</div>
+```
+
+  </div>
+
+</body>
+</html>

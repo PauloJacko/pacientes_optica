@@ -17,9 +17,15 @@
         <h1>Sistema - Óptica LCM</h1>
       </div>
 
-      <div>
+      <div class="header-tabs">
+        <a href="{% url 'dashboard' %}" class="tab {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">👥 Pacientes</a>
+
+        <a href="{% url 'dashboard_empresa' %}" class="tab {% if request.resolver_match.url_name == 'dashboard_empresa' %}active{% endif %}">📊 Empresa</a>
+      </div>
+
+      <div class="header-user">
         Bienvenido {{ request.user.username }} |
-        <a href="{% url 'logout' %}">Cerrar sesión</a>
+        <a href="{% url 'logout' %}" class="logout-link">Cerrar sesión</a>
       </div>
     </div>
 
@@ -379,6 +385,7 @@
         
           window.open(url, '_blank')
         }
+        
       </script>
     </div>
   </body>
