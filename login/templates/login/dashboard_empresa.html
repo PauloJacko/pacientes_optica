@@ -49,7 +49,6 @@
 
   <div class="empresa-container">
 
-```
 <div class="empresa-header">
   <h2>Panel Empresarial</h2>
   <p>Resumen de actividad del sistema</p>
@@ -76,24 +75,213 @@
 
 </div>
 
-<!-- ESPACIO PARA FUTUROS GRÁFICOS -->
+<!-- ESPACIO PARA GRÁFICOS -->
 
 <div class="empresa-panel">
 
   <div class="panel-card">
-    <h3>Actividad del sistema</h3>
-    <p>Aquí podrás agregar gráficos de pacientes por mes, instituciones atendidas y estadísticas.</p>
+    <h3>Pacientes por mes</h3>
+    <canvas id="graficoPacientes"></canvas>
   </div>
 
   <div class="panel-card">
-    <h3>Información general</h3>
-    <p>Este panel puede mostrar métricas importantes de la óptica.</p>
+    <h3>Instituciones atendidas por mes</h3>
+    <canvas id="graficoComparacion"></canvas>
   </div>
 
 </div>
-```
 
   </div>
+
+<!-- MODAL 1: Instituciones -->
+<div id="modalInstituciones" class="modal">
+  <div class="modal-content">
+    <h3 id="tituloMes"></h3>
+    <div id="listaInstituciones"></div>
+    <button onclick="cerrarModal('modalInstituciones')">Cerrar</button>
+  </div>
+</div>
+
+<!-- MODAL 2: Pacientes -->
+<div id="modalPacientes" class="modal">
+  <div class="modal-content">
+    <h3 id="tituloInstitucion"></h3>
+    <div id="listaPacientes"></div>
+    <button onclick="cerrarModal('modalPacientes')">Cerrar</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const pacientesPorMes = {{ pacientes_por_mes|safe }};
+  const evaluacionesTotal = {{ evaluaciones_total }};
+  const institucionesMes = {{ instituciones_mes }};
+  const institucionesPorMes = {{ instituciones_por_mes|safe }};
+  const detalleMeses = {{ detalle_meses|safe }};
+
+  // nombres meses
+  const nombresMeses = [
+    '', 'Enero','Febrero','Marzo','Abril','Mayo','Junio',
+    'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'
+  ];
+
+  // -------------------------
+  // GRÁFICO 1: PACIENTES
+  // -------------------------
+  const ctx1 = document.getElementById('graficoPacientes');
+
+  new Chart(ctx1, {
+    type: 'bar',
+    data: {
+      labels: [
+        'Ene','Feb','Mar','Abr','May','Jun',
+        'Jul','Ago','Sep','Oct','Nov','Dic'
+      ],
+      datasets: [{
+        label: 'Pacientes atendidos',
+        data: pacientesPorMes,
+        borderRadius: 8,
+        backgroundColor: '#3b82f6'
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        x: {
+          grid: { display: false }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1,
+            precision: 0
+          },
+          grid: {
+            color: '#eee'
+          }
+        }
+      }
+    }
+  });
+
+  // -------------------------
+  // GRÁFICO 2: INSTITUCIONES 🔥
+  // -------------------------
+  const ctx2 = document.getElementById('graficoComparacion');
+
+  const chart2 = new Chart(ctx2, {
+    type: 'bar',
+    data: {
+      labels: [
+        'Ene','Feb','Mar','Abr','May','Jun',
+        'Jul','Ago','Sep','Oct','Nov','Dic'
+      ],
+      datasets: [{
+        label: 'Instituciones atendidas',
+        data: institucionesPorMes,
+        borderRadius: 8,
+        backgroundColor: '#22c55e'
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        x: {
+          grid: { display: false }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1,
+            precision: 0
+          },
+          grid: {
+            color: '#eee'
+          }
+        }
+      }
+    }
+  });
+
+  // -------------------------
+  // CLICK EN GRÁFICO 🔥
+  // -------------------------
+  ctx2.onclick = function(evt) {
+    const points = chart2.getElementsAtEventForMode(
+      evt,
+      'nearest',
+      { intersect: true },
+      true
+    );
+
+    if (points.length) {
+      const index = points[0].index;
+      const mes = index + 1;
+
+      abrirInstituciones(mes);
+    }
+  };
+
+  // -------------------------
+  // MODAL INSTITUCIONES
+  // -------------------------
+  function abrirInstituciones(mes){
+    const data = detalleMeses[mes] || [];
+
+    document.getElementById('tituloMes').innerText =
+      "Instituciones - " + nombresMeses[mes];
+
+    let html = "";
+
+    data.forEach(inst => {
+      html += `<div class="item" onclick='abrirPacientes(${JSON.stringify(inst)})'>
+                ${inst.nombre} (${inst.pacientes.length})
+              </div>`;
+    });
+
+    if (html === "") {
+      html = "<div class='item'>Sin datos</div>";
+    }
+
+    document.getElementById('listaInstituciones').innerHTML = html;
+
+    document.getElementById('modalInstituciones').style.display = 'flex';
+  }
+
+  // -------------------------
+  // MODAL PACIENTES
+  // -------------------------
+  function abrirPacientes(inst){
+    document.getElementById('tituloInstitucion').innerText = inst.nombre;
+
+    let html = "";
+
+    inst.pacientes.forEach(p => {
+      html += `
+      <div class="item">
+        <strong>${p.nombre}</strong><br>
+        <span style="color:#666; font-size:13px">${p.rut}</span>
+      </div>
+    `;
+    });
+
+    document.getElementById('listaPacientes').innerHTML = html;
+
+    document.getElementById('modalPacientes').style.display = 'flex';
+  }
+
+  // -------------------------
+  // CERRAR MODAL
+  // -------------------------
+  function cerrarModal(id){
+    document.getElementById(id).style.display = 'none';
+  }
+</script>
 
 </body>
 </html>

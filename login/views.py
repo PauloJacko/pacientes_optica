@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login as auth_login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
-from django.db.models import Max
+from django.db.models import Max, Count
 from django.core.paginator import Paginator
 
 from usuarios.models import Paciente
@@ -12,7 +12,9 @@ from evaluaciones.forms import EvaluacionForm
 from evaluaciones.models import Evaluacion
 
 from django.utils.timezone import now
-from django.db.models import Count
+from django.db.models.functions import ExtractMonth
+from collections import defaultdict
+
 
 def login_view(request):
 
@@ -159,20 +161,98 @@ def imprimir_recetas(request):
 @login_required
 def dashboard_empresa(request):
 
-    mes_actual = now().month
     anio_actual = now().year
 
+    # -------------------------
+    # MÉTRICAS GENERALES
+    # -------------------------
     pacientes_mes = Paciente.objects.filter(
-        fecha_creacion__month=mes_actual,
-        fecha_creacion__year=anio_actual
+        fecha_creacion__year=anio_actual,
+        fecha_creacion__month=now().month
     ).count()
 
     evaluaciones_total = Evaluacion.objects.count()
 
     instituciones_mes = Paciente.objects.values('institucion').distinct().count()
 
+    # -------------------------
+    # PACIENTES POR MES 🔥
+    # -------------------------
+    pacientes_por_mes_qs = (
+        Paciente.objects
+        .filter(fecha_creacion__year=anio_actual)
+        .annotate(mes=ExtractMonth('fecha_creacion'))
+        .values('mes')
+        .annotate(total=Count('id'))
+        .order_by('mes')
+    )
+
+    pacientes_por_mes = [0] * 12
+
+    for item in pacientes_por_mes_qs:
+        pacientes_por_mes[item['mes'] - 1] = item['total']
+
+    # -------------------------
+    # INSTITUCIONES POR MES 🔥 (NORMALIZADAS)
+    # -------------------------
+    pacientes_del_anio = Paciente.objects.filter(
+        fecha_creacion__year=anio_actual
+    )
+
+    instituciones_por_mes_dict = defaultdict(set)
+
+    for p in pacientes_del_anio:
+        if p.institucion:
+            mes = p.fecha_creacion.month
+            institucion_normalizada = p.institucion.strip().lower()
+            instituciones_por_mes_dict[mes].add(institucion_normalizada)
+
+    instituciones_por_mes = [0] * 12
+
+    for mes, instituciones in instituciones_por_mes_dict.items():
+        instituciones_por_mes[mes - 1] = len(instituciones)
+    
+    # -------------------------
+    # DETALLE PARA MODALES 🔥
+    # -------------------------
+    detalle_meses = {}
+
+    for mes in range(1, 13):
+        pacientes_mes_qs = Paciente.objects.filter(
+            fecha_creacion__year=anio_actual,
+            fecha_creacion__month=mes
+        )
+
+        instituciones_dict = {}
+
+        for p in pacientes_mes_qs:
+            if not p.institucion:
+                continue
+
+            inst = p.institucion.strip().lower()
+
+            if inst not in instituciones_dict:
+                instituciones_dict[inst] = {
+                    "nombre": p.institucion.strip(),
+                    "pacientes": []
+                }
+
+            instituciones_dict[inst]["pacientes"].append({
+                "nombre": p.nombre,
+                "rut": p.rut
+            })
+
+        detalle_meses[mes] = list(instituciones_dict.values())
+
+    # -------------------------
+    # RENDER
+    # -------------------------
     return render(request, 'login/dashboard_empresa.html', {
         'pacientes_mes': pacientes_mes,
         'evaluaciones_total': evaluaciones_total,
-        'instituciones_mes': instituciones_mes
+        'instituciones_mes': instituciones_mes,
+
+        'pacientes_por_mes': pacientes_por_mes,
+        'instituciones_por_mes': instituciones_por_mes,
+        'detalle_meses': detalle_meses
     })
