@@ -54,8 +54,9 @@ def editar_paciente(request, paciente_id):
         paciente.fecha_nacimiento = request.POST.get("fecha_nacimiento")
         paciente.telefono = request.POST.get("telefono")
         paciente.institucion = request.POST.get("institucion")
+        paciente.region = request.POST.get("region")
         paciente.anamnesis = request.POST.get("anamnesis")
-
+        
         paciente.save()
 
     return redirect("ficha_paciente", paciente_id=paciente.id)

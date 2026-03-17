@@ -113,9 +113,45 @@
           <div class="modal-body">
             <form id="formPaciente" autocomplete="off">
               {% csrf_token %}
-              {{ paciente_form }}
 
-              <button type="button" onclick="guardarPaciente()">Continuar a Evaluación</button>
+              <div class="form-group">
+                <label>Nombre</label>
+                {{ paciente_form.nombre }}
+              </div>
+
+              <div class="form-group">
+                <label>RUT</label>
+                {{ paciente_form.rut }}
+              </div>
+
+              <div class="form-group">
+                <label>Fecha de nacimiento</label>
+                {{ paciente_form.fecha_nacimiento }}
+              </div>
+
+              <div class="form-group">
+                <label>Teléfono</label>
+                {{ paciente_form.telefono }}
+              </div>
+
+              <div class="form-group">
+                <label>Institución</label>
+                {{ paciente_form.institucion }}
+              </div>
+
+              <div class="form-group">
+                <label>Región</label>
+                {{ paciente_form.region }}
+              </div>
+
+              <div class="form-group">
+                <label>Anamnesis</label>
+                {{ paciente_form.anamnesis }}
+              </div>
+
+              <button type="button" onclick="guardarPaciente()">
+                Continuar a Evaluación
+              </button>
             </form>
           </div>
         </div>
