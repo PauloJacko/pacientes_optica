@@ -69,8 +69,14 @@
   </div>
 
   <div class="empresa-card">
-    <div class="card-title">Evaluaciones totales</div>
-    <div class="card-value">{{ evaluaciones_total }}</div>
+    <div class="card-title">Crecimiento mensual</div>
+    <div class="card-value">
+      {% if crecimiento >= 0 %}
+        <span style="color:#22c55e">▲ {{ crecimiento }}%</span>
+      {% else %}
+        <span style="color:#ef4444">▼ {{ crecimiento }}%</span>
+      {% endif %}
+    </div>
   </div>
 
 </div>
@@ -87,6 +93,16 @@
   <div class="panel-card">
     <h3>Instituciones atendidas por mes</h3>
     <canvas id="graficoComparacion"></canvas>
+  </div>
+
+  <div class="panel-card">
+    <h3>Pacientes por región</h3>
+    <canvas id="graficoRegiones"></canvas>
+  </div>
+
+  <div class="panel-card">
+    <h3>Crecimiento mensual</h3>
+    <canvas id="graficoCrecimiento"></canvas>
   </div>
 
 </div>
@@ -168,7 +184,7 @@
   });
 
   // -------------------------
-  // GRÁFICO 2: INSTITUCIONES 🔥
+  // GRÁFICO 2: INSTITUCIONES 
   // -------------------------
   const ctx2 = document.getElementById('graficoComparacion');
 
@@ -203,6 +219,88 @@
           grid: {
             color: '#eee'
           }
+        }
+      }
+    }
+  });
+
+    // -------------------------
+    // GRÁFICO 3: PACIENTES POR REGIÓN
+    // -------------------------
+
+  const pacientesPorRegion = {{ pacientes_por_region|safe }};
+
+  const ctx3 = document.getElementById('graficoRegiones');
+
+  new Chart(ctx3, {
+    type: 'bar',
+    data: {
+      labels: pacientesPorRegion.map(r => r.region),
+      datasets: [{
+        label: 'Pacientes',
+        data: pacientesPorRegion.map(r => r.total),
+        borderRadius: 8,
+        backgroundColor: '#f59e0b'
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        x: { grid: { display: false } },
+        y: {
+          beginAtZero: true,
+          ticks: { stepSize: 1, precision: 0 },
+          grid: { color: '#eee' }
+        }
+      }
+    }
+  });
+
+    // -------------------------
+    // GRÁFICO 4: CRECIMIENTO MENSUAL
+    // -------------------------
+
+  const pacientesMesActual = {{ pacientes_mes_actual }};
+  const pacientesMesAnterior = {{ pacientes_mes_anterior }};
+
+  const ctx4 = document.getElementById('graficoCrecimiento');
+
+  new Chart(ctx4, {
+    type: 'bar',
+    data: {
+      labels: ['Mes anterior', 'Mes actual'],
+      datasets: [{
+        data: [pacientesMesAnterior, pacientesMesActual],
+        borderRadius: 10,
+        backgroundColor: [
+          '#94a3b8',
+          '#3b82f6'  
+        ]
+      }]
+    },
+    options: {
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return context.raw + ' pacientes';
+            }
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1,
+            precision: 0
+          }
+        },
+        x: {
+          grid: { display: false }
         }
       }
     }

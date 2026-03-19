@@ -14,7 +14,7 @@ from evaluaciones.models import Evaluacion
 from django.utils.timezone import now
 from django.db.models.functions import ExtractMonth
 from collections import defaultdict
-
+from datetime import timedelta
 
 def login_view(request):
 
@@ -176,8 +176,13 @@ def dashboard_empresa(request):
     instituciones_mes = Paciente.objects.values('institucion').distinct().count()
 
     # -------------------------
-    # PACIENTES POR MES 🔥
+    # PACIENTES POR MES 
     # -------------------------
+
+    pacientes_activos = Paciente.objects.filter(
+        fecha_creacion__gte=now() - timedelta(days=30)
+        ).count()
+    
     pacientes_por_mes_qs = (
         Paciente.objects
         .filter(fecha_creacion__year=anio_actual)
@@ -193,7 +198,7 @@ def dashboard_empresa(request):
         pacientes_por_mes[item['mes'] - 1] = item['total']
 
     # -------------------------
-    # INSTITUCIONES POR MES 🔥 (NORMALIZADAS)
+    # INSTITUCIONES POR MES 🔥
     # -------------------------
     pacientes_del_anio = Paciente.objects.filter(
         fecha_creacion__year=anio_actual
@@ -211,7 +216,7 @@ def dashboard_empresa(request):
 
     for mes, instituciones in instituciones_por_mes_dict.items():
         instituciones_por_mes[mes - 1] = len(instituciones)
-    
+
     # -------------------------
     # DETALLE PARA MODALES 🔥
     # -------------------------
@@ -245,6 +250,56 @@ def dashboard_empresa(request):
         detalle_meses[mes] = list(instituciones_dict.values())
 
     # -------------------------
+    # 🔥 PACIENTES POR REGIÓN (NUEVO)
+    # -------------------------
+    pacientes_region_qs = (
+        Paciente.objects
+        .values('region')
+        .annotate(total=Count('id'))
+        .order_by('-total')
+    )
+
+    pacientes_por_region = []
+
+    for r in pacientes_region_qs:
+        pacientes_por_region.append({
+            "region": dict(Paciente.REGION_CHOICES).get(r['region'], r['region']),
+            "total": r['total']
+        })
+    
+    # -------------------------
+    # CRECIMIENTO MENSUAL
+    # -------------------------
+
+    hoy = now()
+
+    # Mes actual
+    inicio_mes_actual = hoy.replace(day=1)
+    fin_mes_actual = hoy
+
+    # Mes anterior
+    fin_mes_anterior = inicio_mes_actual - timedelta(days=1)
+    inicio_mes_anterior = fin_mes_anterior.replace(day=1)
+
+    # Conteos
+    pacientes_mes_actual = Paciente.objects.filter(
+        fecha_creacion__range=(inicio_mes_actual, fin_mes_actual)
+    ).count()
+
+    pacientes_mes_anterior = Paciente.objects.filter(
+        fecha_creacion__range=(inicio_mes_anterior, fin_mes_anterior)
+    ).count()
+
+    # % crecimiento
+    if pacientes_mes_anterior > 0:
+        crecimiento = round(
+            ((pacientes_mes_actual - pacientes_mes_anterior) / pacientes_mes_anterior) * 100,
+            1
+        )
+    else:
+        crecimiento = 100 if pacientes_mes_actual > 0 else 0
+
+    # -------------------------
     # RENDER
     # -------------------------
     return render(request, 'login/dashboard_empresa.html', {
@@ -254,5 +309,10 @@ def dashboard_empresa(request):
 
         'pacientes_por_mes': pacientes_por_mes,
         'instituciones_por_mes': instituciones_por_mes,
-        'detalle_meses': detalle_meses
+        'detalle_meses': detalle_meses,
+        'pacientes_por_region': pacientes_por_region,
+        'pacientes_activos': pacientes_activos,
+        'pacientes_mes_actual': pacientes_mes_actual,
+        'pacientes_mes_anterior': pacientes_mes_anterior,
+        'crecimiento': crecimiento,
     })

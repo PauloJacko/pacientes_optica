@@ -242,55 +242,128 @@ tr:hover {
 /* ========================= */
 
 .modal-editar .modal-content {
-    background: white;
-    padding: 25px;
-    border-radius: 10px;
-    width: 500px;
-    max-width: 90%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 14px;
+    width: 520px;
+    max-width: 92%;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+    animation: fadeIn 0.2s ease;
 }
 
+/* HEADER */
 .modal-editar .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
-.modal-editar label {
-    font-size: 13px;
-    font-weight: bold;
-    margin-bottom: 4px;
-    display: block;
+.modal-editar .modal-header h3 {
+    margin: 0;
+    font-size: 20px;
+    color: #1e2a38;
 }
 
-.modal-editar input,
-.modal-editar textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.modal-editar .cerrar {
+    cursor: pointer;
+    font-size: 18px;
+    color: #888;
+    transition: 0.2s;
 }
 
-.modal-editar textarea {
-    min-height: 70px;
+.modal-editar .cerrar:hover {
+    color: #000;
 }
 
+/* GRID */
 .modal-editar .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    gap: 18px;
 }
 
+/* GRUPO INPUT */
+.modal-editar .form-grid > div {
+    display: flex;
+    flex-direction: column;
+}
+
+/* LABEL */
+.modal-editar label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 6px;
+}
+
+/* INPUTS + SELECT */
+.modal-editar input,
+.modal-editar textarea,
+.modal-editar select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: 0.2s;
+    background: #fafafa;
+}
+
+/* FOCUS PRO */
+.modal-editar input:focus,
+.modal-editar textarea:focus,
+.modal-editar select:focus {
+    outline: none;
+    border-color: #2d8cff;
+    background: #fff;
+    box-shadow: 0 0 0 2px rgba(45, 140, 255, 0.15);
+}
+
+/* TEXTAREA */
+.modal-editar textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+/* ANAMNESIS FULL WIDTH */
+.modal-editar .form-grid div[style*="grid-column"] {
+    grid-column: 1 / -1;
+}
+
+/* BOTÓN */
 .modal-editar .modal-actions {
-    margin-top: 20px;
-    text-align: right;
+    margin-top: 25px;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .modal-editar .modal-actions button {
-    width: auto;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    background: #1e2a38;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
+.modal-editar .modal-actions button:hover {
+    background: #2d8cff;
+}
+
+/* ANIMACIÓN */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 /* ========================= */
 /* MODAL EVALUACION */
 /* ========================= */

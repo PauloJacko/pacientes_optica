@@ -55,6 +55,11 @@
             <div class="label">Fecha nacimiento</div>
             <div class="valor">{{ paciente.fecha_nacimiento }}</div>
           </div>
+
+          <div class="info">
+            <div class="label">Región</div>
+            <div class="valor">{{ paciente.get_region_display }}</div>
+          </div>
         </div>
 
         {% if paciente.anamnesis %}
@@ -167,6 +172,17 @@
         <div>
           <label>Institución</label>
           <input type="text" name="institucion" value="{{ paciente.institucion }}">
+        </div>
+
+        <div>
+          <label>Región</label>
+          <select name="region" required>
+            {% for value, label in paciente.REGION_CHOICES %}
+              <option value="{{ value }}" {% if paciente.region == value %}selected{% endif %}>
+                {{ label }}
+              </option>
+            {% endfor %}
+          </select>
         </div>
 
         <div style="grid-column:1/3">
