@@ -198,7 +198,7 @@ def dashboard_empresa(request):
         pacientes_por_mes[item['mes'] - 1] = item['total']
 
     # -------------------------
-    # INSTITUCIONES POR MES 🔥
+    # INSTITUCIONES POR MES 
     # -------------------------
     pacientes_del_anio = Paciente.objects.filter(
         fecha_creacion__year=anio_actual
@@ -218,7 +218,7 @@ def dashboard_empresa(request):
         instituciones_por_mes[mes - 1] = len(instituciones)
 
     # -------------------------
-    # DETALLE PARA MODALES 🔥
+    # DETALLE PARA MODALES 
     # -------------------------
     detalle_meses = {}
 
@@ -250,7 +250,7 @@ def dashboard_empresa(request):
         detalle_meses[mes] = list(instituciones_dict.values())
 
     # -------------------------
-    # 🔥 PACIENTES POR REGIÓN (NUEVO)
+    # PACIENTES POR REGIÓN
     # -------------------------
     pacientes_region_qs = (
         Paciente.objects

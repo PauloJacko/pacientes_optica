@@ -88,7 +88,7 @@
   color:#0f172a;
 }
 
-/* 🔥 altura controlada de gráficos */
+/* altura controlada de gráficos */
 .panel-card canvas{
   max-height:220px;
 }
@@ -163,7 +163,7 @@
 }
 
 /* -------------------------
-   📱 RESPONSIVE PRO
+RESPONSIVE PRO
 ------------------------- */
 
 @media(max-width:768px){
