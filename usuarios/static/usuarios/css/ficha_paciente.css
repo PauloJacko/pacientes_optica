@@ -641,10 +641,8 @@ tr:hover {
     resize: vertical;
 }
 
-/* ==========================================
-   BOTONES DE ACCIÓN PRINCIPALES
-   ========================================== */
-/* Botón Guardar Cambios (Azul Premium) */
+/* ====BOTONES DE ACCIÓN PRINCIPALES======================= */
+
 .btn-guardar-receta, .veltrix-save-btn {
     display: block;
     width: 100%;
@@ -671,9 +669,6 @@ tr:hover {
     transform: translateY(0);
 }
 
-/* ==========================================
-   BOTONES DE LA TABLA (EDITAR / ELIMINAR)
-   ========================================== */
 .veltrix-actions {
     display: flex;
     gap: 8px;
@@ -693,7 +688,6 @@ tr:hover {
     transition: all 0.2s ease;
 }
 
-/* Editar (Azul sutil) */
 .veltrix-edit-btn {
     background: #eff6ff;
     color: #2563eb;
@@ -715,9 +709,6 @@ tr:hover {
     transform: scale(1.05);
 }
 
-/* ==========================================
-   MODAL DE ELIMINACIÓN
-   ========================================== */
 .veltrix-delete-box {
     background: #ffffff;
     padding: 30px;
@@ -746,7 +737,6 @@ tr:hover {
     margin-top: 25px;
 }
 
-/* Confirmar Eliminar (Rojo sólido) */
 .veltrix-confirm-delete {
     flex: 1;
     background: #dc2626;
@@ -764,7 +754,6 @@ tr:hover {
     box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
 }
 
-/* Cancelar Eliminar (Gris elegante) */
 .veltrix-cancel-delete {
     flex: 1;
     background: #f1f5f9;
@@ -782,19 +771,13 @@ tr:hover {
     color: #1e293b;
 }
 
-
-/* ==========================================
-   RESPONSIVE DESIGN (MEDIA QUERIES)
-   ========================================== */
 @media (max-width: 768px) {
-    /* El modal box ocupa casi toda la pantalla en móviles */
     .veltrix-modal-box.receta-modal {
         padding: 20px;
         max-height: 90vh;
-        overflow-y: auto; /* Scroll interno si la receta es muy larga */
+        overflow-y: auto; 
     }
 
-    /* Convertimos la tabla médica en bloques de tarjetas individuales */
     .tabla-receta, 
     .tabla-receta thead, 
     .tabla-receta tbody, 
@@ -806,7 +789,7 @@ tr:hover {
     }
 
     .tabla-receta thead {
-        display: none; /* Ocultamos los encabezados de tabla tradicionales */
+        display: none; 
     }
 
     .tabla-receta tr {
@@ -826,7 +809,6 @@ tr:hover {
         text-align: center;
     }
 
-    /* Generamos etiquetas artificiales para guiar al usuario en móviles */
     .tabla-receta td:not(.ojo) {
         position: relative;
         padding-left: 40%;
@@ -835,7 +817,7 @@ tr:hover {
     }
 
     .tabla-receta td:not(.ojo)::before {
-        content: attr(data-label); /* Recomiendo añadir data-label en el HTML o usar placeholders */
+        content: attr(data-label);
         position: absolute;
         left: 8px;
         top: 50%;
@@ -844,8 +826,7 @@ tr:hover {
         font-size: 0.85rem;
         color: #64748b;
     }
-    
-    /* Alternativa óptima móvil: reajustar espaciado interno si prefieres mantener los inputs fluidos */
+
     .tabla-receta td {
         padding: 4px 0;
     }

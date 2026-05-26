@@ -346,7 +346,6 @@
         document.getElementById("modalEvaluacion").style.display = "none";
     }
 
-    // Guardar Nueva Evaluación (AJAX)
     document.getElementById("formEvaluacion").addEventListener("submit", function(e){
         e.preventDefault();
         const form = e.target;
@@ -374,7 +373,6 @@
     // --- MODALES VELTRIX (EDITAR Y ELIMINAR EVALUACIÓN) ---
     let veltrixEvalId = null;
 
-    // Abrir Modal de Edición y Cargar Datos Completos
     function abrirVeltrixEditar(e, id){
         if(e) e.stopPropagation(); 
         veltrixEvalId = id;
@@ -407,10 +405,8 @@
             document.getElementById('edit_cerca_oi_eje').value = data.cerca_oi_eje || '';
             document.getElementById('edit_cerca_oi_dp').value = data.cerca_oi_dp || '';
 
-            // Observaciones
             document.getElementById('edit_observaciones').value = data.observaciones || '';
 
-            // Definición dinámica del action del formulario
             document.getElementById('veltrixEditForm').action = `/evaluaciones/${id}/editar/`;
             document.getElementById('veltrixModalEditar').style.display = 'flex';
         })
@@ -421,7 +417,6 @@
         document.getElementById('veltrixModalEditar').style.display = 'none';
     }
 
-    // Interceptar el envío del formulario de Edición (AJAX)
     document.getElementById("veltrixEditForm").addEventListener("submit", function(e){
         e.preventDefault();
         const form = e.target;
