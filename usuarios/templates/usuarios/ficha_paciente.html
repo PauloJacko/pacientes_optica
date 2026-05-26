@@ -2,31 +2,24 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Ficha Paciente</title>
-
-<link rel="stylesheet" href="{% static 'usuarios/css/ficha_paciente.css' %}">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha Paciente</title>
+    <link rel="stylesheet" href="{% static 'usuarios/css/ficha_paciente.css' %}">
 </head>
+<body>
 
-  <body>
     <div class="header">
       <div class="header-left">
         <img src="{% static 'images/logo-lcm.png' %}" class="logo-lcm" />
         <h1>Ficha Paciente</h1>
       </div>
-
       <div>
         <a href="{% url 'dashboard' %}" class="btn-volver">⬅ Volver</a>
       </div>
     </div>
 
     <div class="container">
-      <!-- DATOS PACIENTE -->
-
       <div class="card">
         <h2>{{ paciente.nombre }}</h2>
 
@@ -65,7 +58,6 @@
         {% if paciente.anamnesis %}
           <div style="margin-top:20px">
             <b>Anamnesis</b>
-
             <p>{{ paciente.anamnesis }}</p>
           </div>
         {% endif %}
@@ -75,8 +67,6 @@
           <button class="btn btn-editar" onclick="abrirModal()">✏️ Editar datos</button>
         </div>
       </div>
-
-      <!-- HISTORIAL EVALUACIONES -->
 
       <div class="card">
         <h2>Historial de Evaluaciones</h2>
@@ -88,43 +78,36 @@
               <th>Lejos</th>
               <th>Cerca</th>
               <th>Observaciones</th>
+              <th>Acciones</th>
             </tr>
           </thead>
-
           <tbody>
             {% for e in evaluaciones %}
               <tr class="fila-evaluacion" onclick="window.location.href='{% url 'ver_receta' e.id %}'">
                 <td>{{ e.fecha }}</td>
-
                 <td>
                   <div class="receta">
-                    <div>
-                      <b>OD</b> {{ e.lejos_od_esf }} {{ e.lejos_od_cil }} {{ e.lejos_od_eje }}
-                    </div>
-
-                    <div>
-                      <b>OI</b> {{ e.lejos_oi_esf }} {{ e.lejos_oi_cil }} {{ e.lejos_oi_eje }}
-                    </div>
+                    <div><b>OD</b> {{ e.lejos_od_esf }} {{ e.lejos_od_cil }} {{ e.lejos_od_eje }}</div>
+                    <div><b>OI</b> {{ e.lejos_oi_esf }} {{ e.lejos_oi_cil }} {{ e.lejos_oi_eje }}</div>
                   </div>
                 </td>
-
                 <td>
                   <div class="receta">
-                    <div>
-                      <b>OD</b> {{ e.cerca_od_esf }} {{ e.cerca_od_cil }} {{ e.cerca_od_eje }}
-                    </div>
-
-                    <div>
-                      <b>OI</b> {{ e.cerca_oi_esf }} {{ e.cerca_oi_cil }} {{ e.cerca_oi_eje }}
-                    </div>
+                    <div><b>OD</b> {{ e.cerca_od_esf }} {{ e.cerca_od_cil }} {{ e.cerca_od_eje }}</div>
+                    <div><b>OI</b> {{ e.cerca_oi_esf }} {{ e.cerca_oi_cil }} {{ e.cerca_oi_eje }}</div>
                   </div>
                 </td>
-
                 <td>{{ e.observaciones|default:'-' }}</td>
+                <td onclick="event.stopPropagation()">
+                  <div class="veltrix-actions">
+                    <button type="button" class="veltrix-edit-btn" onclick="abrirVeltrixEditar(event, {{ e.id }})">✏️</button>
+                    <button type="button" class="veltrix-delete-btn" onclick="abrirVeltrixEliminar(event, {{ e.id }})">🗑</button>
+                  </div>
+                </td>
               </tr>
             {% empty %}
               <tr>
-                <td colspan="4">No hay evaluaciones registradas</td>
+                <td colspan="5">No hay evaluaciones registradas</td>
               </tr>
             {% endfor %}
           </tbody>
@@ -132,239 +115,369 @@
       </div>
     </div>
 
-<!-- MODAL EDITAR PACIENTE -->
-
-<div id="modalEditar" class="modal modal-editar">
-  <div class="modal-content">
-
-    <div class="modal-header">
-      <h3>Editar Paciente</h3>
-      <span class="cerrar" onclick="cerrarModal()">✖</span>
-    </div>
-
-    <form method="POST" action="{% url 'editar_paciente' paciente.id %}">
-      {% csrf_token %}
-
-      <div class="form-grid">
-
-        <div>
-          <label>Nombre</label>
-          <input type="text" name="nombre" value="{{ paciente.nombre }}" required>
+    <div id="modalEditar" class="modal modal-editar">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Editar Paciente</h3>
+          <span class="cerrar" onclick="cerrarModal()">✖</span>
         </div>
-
-        <div>
-          <label>RUT</label>
-          <input type="text" name="rut" value="{{ paciente.rut }}" required>
-        </div>
-
-        <div>
-          <label>Fecha nacimiento</label>
-          <input type="date"
-                 name="fecha_nacimiento"
-                 value="{{ paciente.fecha_nacimiento|date:'Y-m-d' }}">
-        </div>
-
-        <div>
-          <label>Teléfono</label>
-          <input type="text" name="telefono" value="{{ paciente.telefono }}">
-        </div>
-
-        <div>
-          <label>Institución</label>
-          <input type="text" name="institucion" value="{{ paciente.institucion }}">
-        </div>
-
-        <div>
-          <label>Región</label>
-          <select name="region" required>
-            {% for value, label in paciente.REGION_CHOICES %}
-              <option value="{{ value }}" {% if paciente.region == value %}selected{% endif %}>
-                {{ label }}
-              </option>
-            {% endfor %}
-          </select>
-        </div>
-
-        <div style="grid-column:1/3">
-          <label>Anamnesis</label>
-          <textarea name="anamnesis">{{ paciente.anamnesis }}</textarea>
-        </div>
-
+        <form method="POST" action="{% url 'editar_paciente' paciente.id %}">
+          {% csrf_token %}
+          <div class="form-grid">
+            <div>
+              <label>Nombre</label>
+              <input type="text" name="nombre" value="{{ paciente.nombre }}" required>
+            </div>
+            <div>
+              <label>RUT</label>
+              <input type="text" name="rut" value="{{ paciente.rut }}" required>
+            </div>
+            <div>
+              <label>Fecha nacimiento</label>
+              <input type="date" name="fecha_nacimiento" value="{{ paciente.fecha_nacimiento|date:'Y-m-d' }}">
+            </div>
+            <div>
+              <label>Teléfono</label>
+              <input type="text" name="telefono" value="{{ paciente.telefono }}">
+            </div>
+            <div>
+              <label>Institución</label>
+              <input type="text" name="institucion" value="{{ paciente.institucion }}">
+            </div>
+            <div>
+              <label>Región</label>
+              <select name="region" required>
+                {% for value, label in paciente.REGION_CHOICES %}
+                  <option value="{{ value }}" {% if paciente.region == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div style="grid-column:1/3">
+              <label>Anamnesis</label>
+              <textarea name="anamnesis">{{ paciente.anamnesis }}</textarea>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button type="submit" class="btn btn-nuevo">💾 Guardar cambios</button>
+          </div>
+        </form>
       </div>
-
-      <div class="modal-actions">
-        <button type="submit" class="btn btn-nuevo">
-          💾 Guardar cambios
-        </button>
-      </div>
-
-    </form>
-
-  </div>
-</div>
-
-
-
-<!-- MODAL EVALUACION -->
-
-<div id="modalEvaluacion" class="modal modal-evaluacion">
-
-  <div class="modal-content receta-modal">
-
-    <div class="modal-header">
-      <h2>Nueva Evaluación</h2>
-      <span class="modal-close" onclick="cerrarModalEvaluacion()">✕</span>
     </div>
 
-    <div class="modal-body">
-
-      <form id="formEvaluacion" autocomplete="off">
-        {% csrf_token %}
-
-        <h3>Lejos</h3>
-
-        <table class="tabla-receta">
-
-          <thead>
-            <tr>
-              <th></th>
-              <th>Esférico</th>
-              <th>Cilíndrico</th>
-              <th>Eje</th>
-              <th>DP</th>
-            </tr>
-          </thead>
-
-          <tbody>
-
-            <tr>
-              <td class="ojo">OD</td>
-              <td>{{ evaluacion_form.lejos_od_esf }}</td>
-              <td>{{ evaluacion_form.lejos_od_cil }}</td>
-              <td>{{ evaluacion_form.lejos_od_eje }}</td>
-              <td>{{ evaluacion_form.lejos_od_dp }}</td>
-            </tr>
-
-            <tr>
-              <td class="ojo">OI</td>
-              <td>{{ evaluacion_form.lejos_oi_esf }}</td>
-              <td>{{ evaluacion_form.lejos_oi_cil }}</td>
-              <td>{{ evaluacion_form.lejos_oi_eje }}</td>
-              <td>{{ evaluacion_form.lejos_oi_dp }}</td>
-            </tr>
-
-          </tbody>
-
-        </table>
-
-
-
-        <h3>Cerca</h3>
-
-        <table class="tabla-receta">
-
-          <thead>
-            <tr>
-              <th></th>
-              <th>Esférico</th>
-              <th>Cilíndrico</th>
-              <th>Eje</th>
-              <th>DP</th>
-            </tr>
-          </thead>
-
-          <tbody>
-
-            <tr>
-              <td class="ojo">OD</td>
-              <td>{{ evaluacion_form.cerca_od_esf }}</td>
-              <td>{{ evaluacion_form.cerca_od_cil }}</td>
-              <td>{{ evaluacion_form.cerca_od_eje }}</td>
-              <td>{{ evaluacion_form.cerca_od_dp }}</td>
-            </tr>
-
-            <tr>
-              <td class="ojo">OI</td>
-              <td>{{ evaluacion_form.cerca_oi_esf }}</td>
-              <td>{{ evaluacion_form.cerca_oi_cil }}</td>
-              <td>{{ evaluacion_form.cerca_oi_eje }}</td>
-              <td>{{ evaluacion_form.cerca_oi_dp }}</td>
-            </tr>
-
-          </tbody>
-
-        </table>
-
-
-
-        <div class="observaciones">
-          <label>ADD / Observaciones</label>
-          {{ evaluacion_form.observaciones }}
+    <div id="modalEvaluacion" class="modal modal-evaluacion">
+      <div class="modal-content receta-modal">
+        <div class="modal-header">
+          <h2>Nueva Evaluación</h2>
+          <span class="modal-close" onclick="cerrarModalEvaluacion()">✕</span>
         </div>
+        <div class="modal-body">
+          <form id="formEvaluacion" autocomplete="off">
+            {% csrf_token %}
+            <h3>Lejos</h3>
+            <table class="tabla-receta">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Esférico</th>
+                  <th>Cilíndrico</th>
+                  <th>Eje</th>
+                  <th>DP</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="ojo">OD</td>
+                  <td>{{ evaluacion_form.lejos_od_esf }}</td>
+                  <td>{{ evaluacion_form.lejos_od_cil }}</td>
+                  <td>{{ evaluacion_form.lejos_od_eje }}</td>
+                  <td>{{ evaluacion_form.lejos_od_dp }}</td>
+                </tr>
+                <tr>
+                  <td class="ojo">OI</td>
+                  <td>{{ evaluacion_form.lejos_oi_esf }}</td>
+                  <td>{{ evaluacion_form.lejos_oi_cil }}</td>
+                  <td>{{ evaluacion_form.lejos_oi_eje }}</td>
+                  <td>{{ evaluacion_form.lejos_oi_dp }}</td>
+                </tr>
+              </tbody>
+            </table>
 
-        <button type="submit" class="btn-guardar-receta">
-          Guardar evaluación
-        </button>
+            <h3>Cerca</h3>
+            <table class="tabla-receta">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Esférico</th>
+                  <th>Cilíndrico</th>
+                  <th>Eje</th>
+                  <th>DP</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="ojo">OD</td>
+                  <td>{{ evaluacion_form.cerca_od_esf }}</td>
+                  <td>{{ evaluacion_form.cerca_od_cil }}</td>
+                  <td>{{ evaluacion_form.cerca_od_eje }}</td>
+                  <td>{{ evaluacion_form.cerca_od_dp }}</td>
+                </tr>
+                <tr>
+                  <td class="ojo">OI</td>
+                  <td>{{ evaluacion_form.cerca_oi_esf }}</td>
+                  <td>{{ evaluacion_form.cerca_oi_cil }}</td>
+                  <td>{{ evaluacion_form.cerca_oi_eje }}</td>
+                  <td>{{ evaluacion_form.cerca_oi_dp }}</td>
+                </tr>
+              </tbody>
+            </table>
 
-      </form>
-
+            <div class="observaciones">
+              <label>ADD / Observaciones</label>
+              {{ evaluacion_form.observaciones }}
+            </div>
+            <button type="submit" class="btn-guardar-receta">Guardar evaluación</button>
+          </form>
+        </div>
+      </div>
     </div>
 
-  </div>
+ <div id="veltrixModalEditar" class="veltrix-modal-wrap">
+      <div class="veltrix-modal-box receta-modal">
+        <div class="veltrix-modal-top">
+          <h2>Editar Evaluación</h2>
+          <span onclick="cerrarVeltrixEditar()" style="cursor:pointer;">✕</span>
+        </div>
+        <div class="modal-body">
+          <form id="veltrixEditForm" method="POST">
+            {% csrf_token %}
+            
+            <h3>Lejos</h3>
+            <table class="tabla-receta">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Esférico</th>
+                  <th>Cilíndrico</th>
+                  <th>Eje</th>
+                  <th>DP</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="ojo">OD</td>
+                  <td><input type="text" name="lejos_od_esf" id="edit_lejos_od_esf"></td>
+                  <td><input type="text" name="lejos_od_cil" id="edit_lejos_od_cil"></td>
+                  <td><input type="text" name="lejos_od_eje" id="edit_lejos_od_eje"></td>
+                  <td><input type="text" name="lejos_od_dp" id="edit_lejos_od_dp"></td>
+                </tr>
+                <tr>
+                  <td class="ojo">OI</td>
+                  <td><input type="text" name="lejos_oi_esf" id="edit_lejos_oi_esf"></td>
+                  <td><input type="text" name="lejos_oi_cil" id="edit_lejos_oi_cil"></td>
+                  <td><input type="text" name="lejos_oi_eje" id="edit_lejos_oi_eje"></td>
+                  <td><input type="text" name="lejos_oi_dp" id="edit_lejos_oi_dp"></td>
+                </tr>
+              </tbody>
+            </table>
 
-</div>
+            <h3>Cerca</h3>
+            <table class="tabla-receta">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Esférico</th>
+                  <th>Cilíndrico</th>
+                  <th>Eje</th>
+                  <th>DP</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="ojo">OD</td>
+                  <td><input type="text" name="cerca_od_esf" id="edit_cerca_od_esf"></td>
+                  <td><input type="text" name="cerca_od_cil" id="edit_cerca_od_cil"></td>
+                  <td><input type="text" name="cerca_od_eje" id="edit_cerca_od_eje"></td>
+                  <td><input type="text" name="cerca_od_dp" id="edit_cerca_od_dp"></td>
+                </tr>
+                <tr>
+                  <td class="ojo">OI</td>
+                  <td><input type="text" name="cerca_oi_esf" id="edit_cerca_oi_esf"></td>
+                  <td><input type="text" name="cerca_oi_cil" id="edit_cerca_oi_cil"></td>
+                  <td><input type="text" name="cerca_oi_eje" id="edit_cerca_oi_eje"></td>
+                  <td><input type="text" name="cerca_oi_dp" id="edit_cerca_oi_dp"></td>
+                </tr>
+              </tbody>
+            </table>
 
-  </div>
-</div>
+            <div class="observaciones">
+              <label>ADD / Observaciones</label>
+              <textarea name="observaciones" id="edit_observaciones"></textarea>
+            </div>
+            
+            <button type="submit" class="btn-guardar-receta">Guardar cambios</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="veltrixDeleteModal" class="veltrix-modal-wrap">
+      <div class="veltrix-delete-box">
+        <h3>Eliminar evaluación</h3>
+        <p>Esta acción no se puede deshacer.</p>
+        <div class="veltrix-delete-actions">
+          <button class="veltrix-confirm-delete" onclick="confirmarVeltrixEliminar()">Eliminar</button>
+          <button class="veltrix-cancel-delete" onclick="cerrarVeltrixEliminar()">Cancelar</button>
+        </div>
+      </div>
+    </div>
 
 <script>
-
+    // --- MODALES PACIENTE Y NUEVA EVALUACIÓN ---
     function abrirModal(){
-        document.getElementById("modalEditar").style.display="flex"
+        document.getElementById("modalEditar").style.display="flex";
     }
-
     function cerrarModal(){
-        document.getElementById("modalEditar").style.display="none"
+        document.getElementById("modalEditar").style.display="none";
     }
-
     function abrirModalEvaluacion(){
-        document.getElementById("modalEvaluacion").style.display = "flex"
+        document.getElementById("modalEvaluacion").style.display = "flex";
     }
-
     function cerrarModalEvaluacion(){
-        document.getElementById("modalEvaluacion").style.display = "none"
+        document.getElementById("modalEvaluacion").style.display = "none";
     }
 
-document.getElementById("formEvaluacion").addEventListener("submit", function(e){
+    // Guardar Nueva Evaluación (AJAX)
+    document.getElementById("formEvaluacion").addEventListener("submit", function(e){
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
 
-  e.preventDefault()
+        fetch("{% url 'crear_evaluacion' paciente.id %}", {
+            method: "POST",
+            headers:{
+                "X-CSRFToken": formData.get("csrfmiddlewaretoken")
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success){
+                location.reload();
+            } else {
+                alert("Error al guardar evaluación");
+            }
+        })
+        .catch(err => console.error("Error:", err));
+    });
 
-  const form = e.target
-  const formData = new FormData(form)
 
-  fetch("{% url 'crear_evaluacion' paciente.id %}", {
-    method: "POST",
-    headers:{
-      "X-CSRFToken": formData.get("csrfmiddlewaretoken")
-    },
-    body: formData
-  })
+    // --- MODALES VELTRIX (EDITAR Y ELIMINAR EVALUACIÓN) ---
+    let veltrixEvalId = null;
 
-  .then(res => res.json())
+    // Abrir Modal de Edición y Cargar Datos Completos
+    function abrirVeltrixEditar(e, id){
+        if(e) e.stopPropagation(); 
+        veltrixEvalId = id;
 
-  .then(data => {
+        fetch(`/evaluaciones/${id}/json/`)
+        .then(r => {
+            if (!r.ok) throw new Error("Error en la respuesta del servidor");
+            return r.json();
+        })
+        .then(data => {
+            // Asignación de datos - Sección LEJOS
+            document.getElementById('edit_lejos_od_esf').value = data.lejos_od_esf || '';
+            document.getElementById('edit_lejos_od_cil').value = data.lejos_od_cil || '';
+            document.getElementById('edit_lejos_od_eje').value = data.lejos_od_eje || '';
+            document.getElementById('edit_lejos_od_dp').value = data.lejos_od_dp || '';
+            
+            document.getElementById('edit_lejos_oi_esf').value = data.lejos_oi_esf || '';
+            document.getElementById('edit_lejos_oi_cil').value = data.lejos_oi_cil || '';
+            document.getElementById('edit_lejos_oi_eje').value = data.lejos_oi_eje || '';
+            document.getElementById('edit_lejos_oi_dp').value = data.lejos_oi_dp || '';
 
-    if(data.success){
-      location.reload()
+            // Asignación de datos - Sección CERCA
+            document.getElementById('edit_cerca_od_esf').value = data.cerca_od_esf || '';
+            document.getElementById('edit_cerca_od_cil').value = data.cerca_od_cil || '';
+            document.getElementById('edit_cerca_od_eje').value = data.cerca_od_eje || '';
+            document.getElementById('edit_cerca_od_dp').value = data.cerca_od_dp || '';
+            
+            document.getElementById('edit_cerca_oi_esf').value = data.cerca_oi_esf || '';
+            document.getElementById('edit_cerca_oi_cil').value = data.cerca_oi_cil || '';
+            document.getElementById('edit_cerca_oi_eje').value = data.cerca_oi_eje || '';
+            document.getElementById('edit_cerca_oi_dp').value = data.cerca_oi_dp || '';
+
+            // Observaciones
+            document.getElementById('edit_observaciones').value = data.observaciones || '';
+
+            // Definición dinámica del action del formulario
+            document.getElementById('veltrixEditForm').action = `/evaluaciones/${id}/editar/`;
+            document.getElementById('veltrixModalEditar').style.display = 'flex';
+        })
+        .catch(err => console.error("Error al cargar datos:", err));
     }
 
-    else{
-      alert("Error al guardar evaluación")
+    function cerrarVeltrixEditar(){
+        document.getElementById('veltrixModalEditar').style.display = 'none';
     }
 
-  })
+    // Interceptar el envío del formulario de Edición (AJAX)
+    document.getElementById("veltrixEditForm").addEventListener("submit", function(e){
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
 
-})
+        fetch(form.action, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": formData.get("csrfmiddlewaretoken")
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success){
+                location.reload();
+            } else {
+                alert("Error al editar la evaluación");
+            }
+        })
+        .catch(err => console.error("Error al editar:", err));
+    });
+
+    // Abrir y Cerrar Modal de Eliminación
+    function abrirVeltrixEliminar(e, id){
+        if(e) e.stopPropagation(); 
+        veltrixEvalId = id;
+        document.getElementById('veltrixDeleteModal').style.display = 'flex';
+    }
+    
+    function cerrarVeltrixEliminar(){
+        document.getElementById('veltrixDeleteModal').style.display = 'none';
+    }
+
+    // Confirmar Eliminación de Evaluación (AJAX)
+    function confirmarVeltrixEliminar(){
+        const formToken = document.querySelector('#veltrixEditForm [name=csrfmiddlewaretoken]');
+        if(!formToken) return;
+        const csrfToken = formToken.value;
+
+        fetch(`/evaluaciones/${veltrixEvalId}/eliminar/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken
+            }
+        })
+        .then(r => r.json())
+        .then(data => {
+            if(data.success){
+                location.reload();
+            } else {
+                alert("Error al eliminar la evaluación");
+            }
+        })
+        .catch(err => console.error("Error al eliminar:", err));
+    }
 </script>
-  </body>
+</body>
 </html>

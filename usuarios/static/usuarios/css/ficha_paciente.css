@@ -28,8 +28,10 @@ body {
     color: white;
 }
 
-.logo-lcm {
-    height: 50px;
+.logo-lcm{
+    height: 40px;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
 }
 
 /* CONTAINER */
@@ -487,4 +489,364 @@ tr:hover {
 .modal-close:hover {
     background: #f1f1f1;
     color: #000;
+}
+
+
+/* ==========================================
+   CONFIGURACIÓN GENERAL DEL WRAPPER (MODAL)
+   ========================================== */
+.veltrix-modal-wrap {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6); /* Un tono oscuro azulado más moderno */
+    backdrop-filter: blur(4px);        /* Efecto de desenfoque al fondo */
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    padding: 16px;                     /* Espaciado de seguridad para móviles */
+    transition: all 0.3s ease;
+}
+
+/* ==========================================
+   CONTENEDORES DE LOS MODALES (BOXES)
+   ========================================== */
+/* Caja estándar (Eliminar / Alertas) */
+.veltrix-modal-box {
+    width: 100%;
+    max-width: 450px;
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    animation: veltrixSlideUp 0.3s ease-out;
+}
+
+/* Caja extendida exclusiva para la Receta Oftalmológica (Editar) */
+.veltrix-modal-box.receta-modal {
+    max-width: 800px;
+}
+
+/* Animación de entrada suave */
+@keyframes veltrixSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================
+   CABECERA DEL MODAL
+   ========================================== */
+.veltrix-modal-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 15px;
+}
+
+.veltrix-modal-top h2 {
+    font-size: 1.4rem;
+    color: #1e293b;
+    font-weight: 700;
+    margin: 0;
+}
+
+.veltrix-modal-top span {
+    font-size: 1.2rem;
+    color: #94a3b8;
+    transition: color 0.2s;
+    padding: 4px;
+}
+
+.veltrix-modal-top span:hover {
+    color: #475569;
+}
+
+/* ==========================================
+   FORMULARIOS, TABLAS Y CAMPOS DE LA RECETA
+   ========================================== */
+.modal-body h3 {
+    font-size: 1.1rem;
+    color: #334155;
+    margin: 20px 0 10px 0;
+    font-weight: 600;
+}
+
+/* Estructura de tablas para OD / OI */
+.tabla-receta {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.tabla-receta th {
+    font-size: 0.85rem;
+    color: #64748b;
+    text-align: left;
+    padding: 8px;
+    font-weight: 500;
+}
+
+.tabla-receta td {
+    padding: 6px;
+}
+
+.tabla-receta td.ojo {
+    font-weight: 700;
+    color: #1e293b;
+    width: 40px;
+    text-align: center;
+    background: #f8fafc;
+    border-radius: 8px;
+}
+
+/* Inputs de las tablas y áreas de texto */
+.tabla-receta input[type="text"],
+.observaciones textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    color: #334155;
+    background-color: #ffffff;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.tabla-receta input[type="text"]:focus,
+.observaciones textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+    background-color: #fff;
+}
+
+/* Bloque de Observaciones */
+.observaciones {
+    margin-top: 20px;
+}
+
+.observaciones label {
+    display: block;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+}
+
+.observaciones textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* ==========================================
+   BOTONES DE ACCIÓN PRINCIPALES
+   ========================================== */
+/* Botón Guardar Cambios (Azul Premium) */
+.btn-guardar-receta, .veltrix-save-btn {
+    display: block;
+    width: 100%;
+    margin-top: 25px;
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    padding: 14px 20px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+}
+
+.btn-guardar-receta:hover, .veltrix-save-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px -2px rgba(37, 99, 235, 0.3);
+}
+
+.btn-guardar-receta:active, .veltrix-save-btn:active {
+    transform: translateY(0);
+}
+
+/* ==========================================
+   BOTONES DE LA TABLA (EDITAR / ELIMINAR)
+   ========================================== */
+.veltrix-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.veltrix-edit-btn,
+.veltrix-delete-btn {
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+}
+
+/* Editar (Azul sutil) */
+.veltrix-edit-btn {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.veltrix-edit-btn:hover {
+    background: #dbeafe;
+    transform: scale(1.05);
+}
+
+/* Eliminar (Rojo sutil) */
+.veltrix-delete-btn {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.veltrix-delete-btn:hover {
+    background: #fee2e2;
+    transform: scale(1.05);
+}
+
+/* ==========================================
+   MODAL DE ELIMINACIÓN
+   ========================================== */
+.veltrix-delete-box {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 22px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.veltrix-delete-box h2 {
+    color: #1e293b;
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+}
+
+.veltrix-delete-box p {
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.veltrix-delete-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+/* Confirmar Eliminar (Rojo sólido) */
+.veltrix-confirm-delete {
+    flex: 1;
+    background: #dc2626;
+    color: #ffffff;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.veltrix-confirm-delete:hover {
+    background: #b91c1c;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+}
+
+/* Cancelar Eliminar (Gris elegante) */
+.veltrix-cancel-delete {
+    flex: 1;
+    background: #f1f5f9;
+    color: #475569;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.veltrix-cancel-delete:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+}
+
+
+/* ==========================================
+   RESPONSIVE DESIGN (MEDIA QUERIES)
+   ========================================== */
+@media (max-width: 768px) {
+    /* El modal box ocupa casi toda la pantalla en móviles */
+    .veltrix-modal-box.receta-modal {
+        padding: 20px;
+        max-height: 90vh;
+        overflow-y: auto; /* Scroll interno si la receta es muy larga */
+    }
+
+    /* Convertimos la tabla médica en bloques de tarjetas individuales */
+    .tabla-receta, 
+    .tabla-receta thead, 
+    .tabla-receta tbody, 
+    .tabla-receta th, 
+    .tabla-receta td, 
+    .tabla-receta tr {
+        display: block;
+        width: 100%;
+    }
+
+    .tabla-receta thead {
+        display: none; /* Ocultamos los encabezados de tabla tradicionales */
+    }
+
+    .tabla-receta tr {
+        background: #f8fafc;
+        border-radius: 14px;
+        padding: 12px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+    }
+
+    .tabla-receta td.ojo {
+        width: 100%;
+        margin-bottom: 8px;
+        padding: 6px 0;
+        background: #2563eb;
+        color: white;
+        text-align: center;
+    }
+
+    /* Generamos etiquetas artificiales para guiar al usuario en móviles */
+    .tabla-receta td:not(.ojo) {
+        position: relative;
+        padding-left: 40%;
+        margin-bottom: 8px;
+        text-align: right;
+    }
+
+    .tabla-receta td:not(.ojo)::before {
+        content: attr(data-label); /* Recomiendo añadir data-label en el HTML o usar placeholders */
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: #64748b;
+    }
+    
+    /* Alternativa óptima móvil: reajustar espaciado interno si prefieres mantener los inputs fluidos */
+    .tabla-receta td {
+        padding: 4px 0;
+    }
 }

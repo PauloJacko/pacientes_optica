@@ -14,7 +14,7 @@
     <div class="header">
       <div class="header-left">
         <img src="{% static 'images/logo-lcm.png' %}" class="logo-lcm" alt="LCM" />
-        <h1>Sistema - Óptica LCM</h1>
+        <h1>Sistema - Óptica Nexo</h1>
       </div>
 
       <div class="header-tabs">
@@ -271,6 +271,17 @@
         </div>
       </div>
 
+      <div id="novyraToast" class="novyra-toast">
+        <div class="novyra-toast-icon">✓</div>
+
+        <div class="novyra-toast-content">
+          <span class="novyra-toast-title">Paciente guardado</span>
+          <span class="novyra-toast-text">
+            La evaluación fue registrada correctamente.
+          </span>
+        </div>
+      </div>
+
       <script>
         let pacienteId = null
         
@@ -324,8 +335,11 @@
             .then((r) => r.json())
             .then((data) => {
               if (data.success) {
-                alert('Paciente y evaluación guardados')
-                location.reload()
+                mostrarNovyraToast()
+
+                setTimeout(() => {
+                  location.reload()
+                }, 1800)
               }
             })
         })
@@ -420,6 +434,16 @@
           let url = `/recetas/imprimir/?nombre=${nombre}&rut=${rut}&institucion=${institucion}`
         
           window.open(url, '_blank')
+        }
+
+        function mostrarNovyraToast() {
+          const toast = document.getElementById('novyraToast')
+
+          toast.classList.add('show')
+
+          setTimeout(() => {
+            toast.classList.remove('show')
+          }, 1600)
         }
         
       </script>
