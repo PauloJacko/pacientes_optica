@@ -8,4 +8,5 @@ urlpatterns = [
     path('<int:evaluacion_id>/json/', usuarios_views.evaluacion_json, name='evaluacion_json'),
     path('<int:evaluacion_id>/editar/', usuarios_views.editar_evaluacion, name='editar_evaluacion'),
     path('<int:evaluacion_id>/eliminar/', usuarios_views.eliminar_evaluacion, name='eliminar_evaluacion'),
+    path('crear-completo/', views.crear_atencion_completa, name='crear_atencion_completa'),
 ]

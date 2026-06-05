@@ -301,38 +301,42 @@
         function cerrarModalEvaluacion() {
           modalEvaluacion.style.display = 'none'
         }
-        
+
         function guardarPaciente() {
-          let formData = new FormData(document.getElementById('formPaciente'))
-        
-          fetch('/usuarios/nuevo/', {
-            method: 'POST',
-            body: formData,
-            headers: { 'X-CSRFToken': getCookie('csrftoken') }
-          })
-            .then((r) => r.json())
-            .then((data) => {
-              if (data.success) {
-                pacienteId = data.paciente_id
-                cerrarModalPaciente()
-                abrirModalEvaluacion()
-              } else {
-                alert('Error al guardar paciente')
-              }
-            })
+          const formPac = document.getElementById('formPaciente');
+
+          if (!formPac.checkValidity()) {
+            formPac.reportValidity();
+            return;
+          }
+
+          cerrarModalPaciente();
+          abrirModalEvaluacion();
         }
-        
+
         document.getElementById('formEvaluacion').addEventListener('submit', function (e) {
           e.preventDefault()
+
+          let masterFormData = new FormData(this)
+
+          let pacienteFormData = new FormData(document.getElementById('formPaciente'))
+
+          for (let [key, value] of pacienteFormData.entries()) {
+            if (key !== 'csrfmiddlewaretoken') { 
+              masterFormData.append(key, value);
+            }
+          }
         
-          let formData = new FormData(this)
-        
-          fetch(`/evaluaciones/nuevo/${pacienteId}/`, {
+          // Apunta a la nueva vista unificada
+          fetch('/evaluaciones/crear-completo/', {
             method: 'POST',
-            body: formData,
+            body: masterFormData,
             headers: { 'X-CSRFToken': getCookie('csrftoken') }
           })
-            .then((r) => r.json())
+            .then((r) => {
+              if (!r.ok) throw new Error('Error de red');
+              return r.json();
+            })
             .then((data) => {
               if (data.success) {
                 mostrarNovyraToast()
@@ -340,8 +344,14 @@
                 setTimeout(() => {
                   location.reload()
                 }, 1800)
+              } else {
+                alert('Error al guardar: ' + (data.error || 'Por favor verifique los datos.'));
               }
             })
+            .catch((error) => {
+
+              alert('Falla en la conexión debido a la mala señal. Espere un momento e intente presionar "Guardar evaluación" nuevamente.');
+            });
         })
         
         function getCookie(name) {
@@ -447,6 +457,8 @@
         }
         
       </script>
+
+
     </div>
   </body>
 </html>

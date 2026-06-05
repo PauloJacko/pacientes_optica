@@ -1,40 +1,30 @@
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from .forms import PacienteForm
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from usuarios.models import Paciente
+from usuarios.forms import PacienteForm
 from evaluaciones.models import Evaluacion
-from .models import Paciente
 from evaluaciones.forms import EvaluacionForm
 
 @require_POST
+@login_required
 def crear_paciente(request):
-
     form = PacienteForm(request.POST)
-
     if form.is_valid():
         paciente = form.save()
-
         return JsonResponse({
             'success': True,
             'paciente_id': paciente.id,
             'nombre': paciente.nombre
         })
-
-    return JsonResponse({
-        'success': False,
-        'errors': form.errors
-    })
+    return JsonResponse({'success': False, 'errors': form.errors})
 
 
+@login_required
 def ficha_paciente(request, paciente_id):
-
     paciente = get_object_or_404(Paciente, id=paciente_id)
-
-    evaluaciones = Evaluacion.objects.filter(
-        paciente=paciente
-    ).order_by("-fecha")
-
+    evaluaciones = Evaluacion.objects.filter(paciente=paciente).order_by("-fecha")
     evaluacion_form = EvaluacionForm()
 
     return render(request, "usuarios/ficha_paciente.html", {
@@ -43,35 +33,19 @@ def ficha_paciente(request, paciente_id):
         "evaluacion_form": evaluacion_form
     })
 
+
+@require_POST
+@login_required
 def editar_paciente(request, paciente_id):
-
     paciente = get_object_or_404(Paciente, id=paciente_id)
-
-    if request.method == "POST":
-
-        paciente.nombre = request.POST.get("nombre")
-        paciente.rut = request.POST.get("rut")
-        paciente.fecha_nacimiento = request.POST.get("fecha_nacimiento")
-        paciente.telefono = request.POST.get("telefono")
-        paciente.institucion = request.POST.get("institucion")
-        paciente.region = request.POST.get("region")
-        paciente.anamnesis = request.POST.get("anamnesis")
-        
-        paciente.save()
-
+    form = PacienteForm(request.POST, instance=paciente)
+    
+    if form.is_valid():
+        form.save()
     return redirect("ficha_paciente", paciente_id=paciente.id)
 
-def evaluacion_json(request, evaluacion_id):
 
-    e = get_object_or_404(Evaluacion, id=evaluacion_id)
-
-    return JsonResponse({
-        "lejos_od_esf": e.lejos_od_esf,
-        "lejos_od_cil": e.lejos_od_cil,
-        "lejos_od_eje": e.lejos_od_eje,
-        "observaciones": e.observaciones or "",
-    })
-
+@login_required
 def evaluacion_json(request, evaluacion_id):
     e = get_object_or_404(Evaluacion, id=evaluacion_id)
     return JsonResponse({
@@ -100,7 +74,9 @@ def evaluacion_json(request, evaluacion_id):
         "observaciones": e.observaciones or "",
     })
 
+
 @require_POST
+@login_required
 def editar_evaluacion(request, evaluacion_id):
     e = get_object_or_404(Evaluacion, id=evaluacion_id)
 
@@ -131,14 +107,10 @@ def editar_evaluacion(request, evaluacion_id):
 
     return JsonResponse({"success": True})
 
+
 @require_POST
+@login_required
 def eliminar_evaluacion(request, evaluacion_id):
-
     e = get_object_or_404(Evaluacion, id=evaluacion_id)
-
     e.delete()
-
-    return JsonResponse({
-        "success": True
-    })
-
+    return JsonResponse({"success": True})
