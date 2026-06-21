@@ -100,9 +100,27 @@ body{
 }
 
 input[type='text'] {
-    width: 70px;      
-    font-size: 12px;    
-    padding: 8px 6px;   
+    width: 135px;        
+    max-width: 140px;     
+    font-size: 13px;
+    padding: 8px 10px;    
+    text-overflow: ellipsis; 
+}
+
+#rut_busqueda {
+    width: 105px;        
+    max-width: 110px;
+}
+
+.top-bar input[type="date"] {
+    padding: 6px 4px;     
+    width: 110px;        
+    font-size: 12px;
+}
+
+.top-bar span {
+    font-size: 0.85rem;
+    margin: 0 2px;       
 }
 
 .top-bar input[type="date"] {
