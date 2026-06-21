@@ -49,6 +49,9 @@ def dashboard(request):
     rut = request.GET.get('rut')
     institucion = request.GET.get('institucion')
 
+    fecha_desde = request.GET.get('fecha_desde')
+    fecha_hasta = request.GET.get('fecha_hasta')
+
     if nombre:
         pacientes_lista = pacientes_lista.filter(nombre__icontains=nombre)
 
@@ -57,6 +60,12 @@ def dashboard(request):
 
     if institucion:
         pacientes_lista = pacientes_lista.filter(institucion__icontains=institucion)
+
+    if fecha_desde:
+        pacientes_lista = pacientes_lista.filter(fecha_creacion__date__gte=fecha_desde)
+        
+    if fecha_hasta:
+        pacientes_lista = pacientes_lista.filter(fecha_creacion__date__lte=fecha_hasta)
 
     paginator = Paginator(pacientes_lista, 12)
     page_number = request.GET.get('page')

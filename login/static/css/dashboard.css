@@ -91,12 +91,50 @@ body{
     margin:auto;
 }
 
-.top-bar{
-    display:flex;
-    gap:10px;
-    margin-bottom:20px;
-    flex-wrap:wrap;
+.top-bar {
+    display: flex;
+    gap: 8px;    
+    margin-bottom: 20px;
+    align-items: center;
+    flex-wrap: nowrap;  
 }
+
+input[type='text'] {
+    width: 70px;      
+    font-size: 12px;    
+    padding: 8px 6px;   
+}
+
+.top-bar input[type="date"] {
+    padding: 6px 6px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 12px;
+    width: 100px;       
+}
+
+.btn-clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;            
+    height: 28px;
+    background: #e0e0e0;       
+    color: #555;
+    border-radius: 50%;        
+    text-decoration: none;     
+    font-weight: bold;
+    font-size: 11px;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.btn-clear:hover {
+    background: #5b5b5b88;       
+    color: white;
+    transform: scale(1.05);
+}
+
 
 /* INPUTS */
 

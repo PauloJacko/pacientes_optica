@@ -37,7 +37,14 @@
 
         <input type="text" name="institucion" placeholder="Buscar por institución" value="{{ request.GET.institucion }}" />
 
+        <div class="date-filter-group" style="display: inline-flex; gap: 5px; align-items: center;">
+          <input type="date" name="fecha_desde" title="Fecha desde" value="{{ request.GET.fecha_desde }}" />
+          <span style="color: #666; font-size: 0.9rem;">hasta</span>
+          <input type="date" name="fecha_hasta" title="Fecha hasta" value="{{ request.GET.fecha_hasta }}" />
+        </div>
+
         <button class="btn-search" type="submit">Buscar</button>
+        <a href="{% url 'dashboard' %}" class="btn-clear" title="Limpiar filtros">✕</a>
 
         <button type="button" class="btn-nuevo" onclick="abrirModalPaciente()">
           <span class="icono">+</span>
