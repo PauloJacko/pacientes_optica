@@ -372,145 +372,183 @@ tr:hover{
     background:#e9eef5;
 }
 
-/* ================= MODAL ================= */
+/* ================= MODAL BASE ================= */
 
-.modal{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.45);
-    justify-content:center;
-    align-items:center;
-    z-index:1000;
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px); /* Efecto cristalino elegante */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
-.modal-content{
-    background:white;
-    border-radius:10px;
-    width:90%;
-    max-width:520px;
-    max-height:90vh;
-    display:flex;
-    flex-direction:column;
-    box-shadow:0 10px 30px rgba(0,0,0,0.2);
-    animation:modalFade 0.2s ease;
-    padding-right: 10px;
-}
-
-.receta-modal{
-    max-width:900px;
-}
-
-.modal-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:15px 20px;
-    border-bottom:1px solid #eee;
-    font-weight:bold;
-}
-
-.modal-header h2{
-    margin:0;
-    font-size:18px;
-}
-
-.modal-close{
-    font-size:22px;
-    cursor:pointer;
-    color:#777;
-    transition:0.2s;
-}
-
-.modal-close:hover{
-    color:#000;
-}
-
-.modal-body{
-    padding:22px;
-    overflow-y:auto;
-}
-
-/* ===== FORMULARIO MODAL PRO ===== */
-
-.modal form p {
+.modal-content {
+    background: #ffffff;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 580px; /* Ancho ajustado para layout de 2 columnas */
+    max-height: 88vh;
     display: flex;
     flex-direction: column;
-    margin-bottom: 14px;
-    padding-right: 5px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    animation: modalFade 0.25s ease-out;
+    overflow: hidden; /* Se elimina padding-right directo que rompía el alineado */
+}
+
+.receta-modal {
+    max-width: 900px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-bottom: 1px solid #eef1f5;
+    background: #fdfdfd;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #2c3e50;
+    font-weight: 700;
+}
+
+.modal-close {
+    font-size: 20px;
+    cursor: pointer;
+    color: #888;
+    transition: all 0.2s;
+    line-height: 1;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.modal-close:hover {
+    color: #000;
+    background: #f0f0f0;
+}
+
+.modal-body {
+    padding: 24px;
+    overflow-y: auto;
+}
+
+/* ================= GRID FORMULARIO MODAL ================= */
+
+/* Distribución en Grid de 2 columnas */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ocupar 2 columnas completas en campos largos */
+.form-group.full-width {
+    grid-column: 1 / -1;
 }
 
 .modal label {
     font-size: 13px;
     font-weight: 600;
-    margin-bottom: 5px;
-    color: #555;
-    padding-right: 5px;      
+    margin-bottom: 6px;
+    color: #4a5568;
 }
 
-/* Inputs, textarea y SELECT (aquí mejoras región) */
-.modal input,
+/* Estilos unificados de inputs */
+.modal input[type="text"],
+.modal input[type="date"],
+.modal input[type="tel"],
 .modal textarea,
 .modal select {
     width: 100%;
-    padding: 9px 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+    box-sizing: border-box; /* Evita que el padding sobrepase el tamaño */
+    padding: 10px 12px;
+    border: 1px solid #cbd5e0;
+    border-radius: 8px;
     font-size: 14px;
-    transition: all 0.2s ease;
-    background: #fafafa;
-    padding-right: 5px;
+    color: #2d3748;
+    transition: all 0.2s ease-in-out;
+    background: #f8fafc;
+}
+
+/* Estilo para Textarea */
+.modal textarea {
+    resize: vertical;
+    min-height: 70px;
 }
 
 /* Hover */
 .modal input:hover,
 .modal textarea:hover,
 .modal select:hover {
-    border-color: #bbb;
+    border-color: #a0aec0;
 }
 
-/* Focus elegante */
+/* Focus */
 .modal input:focus,
 .modal textarea:focus,
 .modal select:focus {
     outline: none;
     border-color: #1faa59;
-    background: #fff;
-    box-shadow: 0 0 0 2px rgba(31,170,89,0.15);
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(31, 170, 89, 0.15);
 }
 
-/* SELECT flecha más moderna */
+/* Select Flecha Personalizada */
 .modal select {
     appearance: none;
-    background-image: url("data:image/svg+xml;utf8,<svg fill='%23666' height='20' viewBox='0 0 20 20' width='20'><path d='M5 7l5 5 5-5z'/></svg>");
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%234a5568' height='20' viewBox='0 0 20 20' width='20'><path d='M5 7l5 5 5-5z'/></svg>");
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 14px;
     cursor: pointer;
+    padding-right: 30px;
 }
 
-.modal button{
-    width:100%;
-    padding:10px;
-    background:#1faa59;
-    color:white;
-    border:none;
-    border-radius:6px;
-    font-weight:bold;
+/* Botón del Modal */
+.modal button[type="button"],
+.modal button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background: #1faa59;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    box-shadow: 0 4px 6px rgba(31, 170, 89, 0.2);
 }
 
-.modal button:hover{
-    background:#188c47;
+.modal button[type="button"]:hover,
+.modal button[type="submit"]:hover {
+    background: #188c47;
 }
 
-@keyframes modalFade{
-    from{
-        opacity:0;
-        transform:scale(0.95);
+@keyframes modalFade {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.98);
     }
-    to{
-        opacity:1;
-        transform:scale(1);
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 

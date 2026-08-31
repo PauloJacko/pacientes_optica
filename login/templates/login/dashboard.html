@@ -108,61 +108,62 @@
         {% endif %}
       </div>
 
-      <!-- MODAL PACIENTE -->
+<!-- MODAL PACIENTE -->
+<div id="modalPaciente" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Nuevo Paciente</h2>
+      <span class="modal-close" onclick="cerrarModalPaciente()">✕</span>
+    </div>
 
-      <div id="modalPaciente" class="modal">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h2>Nuevo Paciente</h2>
-            <span class="modal-close" onclick="cerrarModalPaciente()">✕</span>
+    <div class="modal-body">
+      <form id="formPaciente" autocomplete="off">
+        {% csrf_token %}
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Nombre</label>
+            {{ paciente_form.nombre }}
           </div>
 
-          <div class="modal-body">
-            <form id="formPaciente" autocomplete="off">
-              {% csrf_token %}
+          <div class="form-group">
+            <label>RUT</label>
+            {{ paciente_form.rut }}
+          </div>
 
-              <div class="form-group">
-                <label>Nombre</label>
-                {{ paciente_form.nombre }}
-              </div>
+          <div class="form-group">
+            <label>Fecha de nacimiento</label>
+            {{ paciente_form.fecha_nacimiento }}
+          </div>
 
-              <div class="form-group">
-                <label>RUT</label>
-                {{ paciente_form.rut }}
-              </div>
+          <div class="form-group">
+            <label>Teléfono</label>
+            {{ paciente_form.telefono }}
+          </div>
 
-              <div class="form-group">
-                <label>Fecha de nacimiento</label>
-                {{ paciente_form.fecha_nacimiento }}
-              </div>
+          <div class="form-group">
+            <label>Institución</label>
+            {{ paciente_form.institucion }}
+          </div>
 
-              <div class="form-group">
-                <label>Teléfono</label>
-                {{ paciente_form.telefono }}
-              </div>
+          <div class="form-group">
+            <label>Región</label>
+            {{ paciente_form.region }}
+          </div>
 
-              <div class="form-group">
-                <label>Institución</label>
-                {{ paciente_form.institucion }}
-              </div>
-
-              <div class="form-group">
-                <label>Región</label>
-                {{ paciente_form.region }}
-              </div>
-
-              <div class="form-group">
-                <label>Anamnesis</label>
-                {{ paciente_form.anamnesis }}
-              </div>
-
-              <button type="button" onclick="guardarPaciente()">
-                Continuar a Evaluación
-              </button>
-            </form>
+          <div class="form-group full-width">
+            <label>Anamnesis</label>
+            {{ paciente_form.anamnesis }}
           </div>
         </div>
-      </div>
+
+        <button type="button" onclick="guardarPaciente()">
+          Continuar a Evaluación
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
 
       <!-- MODAL EVALUACION -->
 
@@ -289,181 +290,184 @@
         </div>
       </div>
 
-      <script>
-        let pacienteId = null
-        
-        const modalPaciente = document.getElementById('modalPaciente')
-        const modalEvaluacion = document.getElementById('modalEvaluacion')
-        
-        function abrirModalPaciente() {
-          modalPaciente.style.display = 'flex'
-        }
-        function cerrarModalPaciente() {
-          modalPaciente.style.display = 'none'
-        }
-        
-        function abrirModalEvaluacion() {
-          modalEvaluacion.style.display = 'flex'
-        }
-        function cerrarModalEvaluacion() {
-          modalEvaluacion.style.display = 'none'
-        }
+<script>
+  let pacienteId = null
 
-        function guardarPaciente() {
-          const formPac = document.getElementById('formPaciente');
+  const modalPaciente = document.getElementById('modalPaciente')
+  const modalEvaluacion = document.getElementById('modalEvaluacion')
 
-          if (!formPac.checkValidity()) {
-            formPac.reportValidity();
-            return;
+  function abrirModalPaciente() {
+    modalPaciente.style.display = 'flex'
+  }
+  function cerrarModalPaciente() {
+    modalPaciente.style.display = 'none'
+  }
+
+  function abrirModalEvaluacion() {
+    modalEvaluacion.style.display = 'flex'
+  }
+  function cerrarModalEvaluacion() {
+    modalEvaluacion.style.display = 'none'
+  }
+
+  function guardarPaciente() {
+    const formPac = document.getElementById('formPaciente');
+
+    if (!formPac.checkValidity()) {
+      formPac.reportValidity();
+      return;
+    }
+
+    cerrarModalPaciente();
+    abrirModalEvaluacion();
+  }
+
+  document.getElementById('formEvaluacion').addEventListener('submit', function (e) {
+    e.preventDefault()
+
+    let masterFormData = new FormData(this)
+    let pacienteFormData = new FormData(document.getElementById('formPaciente'))
+
+    for (let [key, value] of pacienteFormData.entries()) {
+      if (key !== 'csrfmiddlewaretoken') { 
+        masterFormData.append(key, value);
+      }
+    }
+
+    // Apunta a la vista unificada
+    fetch('/evaluaciones/crear-completo/', {
+      method: 'POST',
+      body: masterFormData,
+      headers: { 'X-CSRFToken': getCookie('csrftoken') }
+    })
+      .then((r) => {
+        if (!r.ok) throw new Error('Error de red');
+        return r.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          cerrarModalEvaluacion();
+          mostrarNovyraToast();
+
+          // 🖨️ ABRIR LA RECETA AUTOMÁTICAMENTE EN UNA PESTAÑA NUEVA PARA IMPRIMIR
+          if (data.evaluacion_id) {
+            window.open(`/evaluaciones/receta/${data.evaluacion_id}/`, '_blank');
           }
-
-          cerrarModalPaciente();
-          abrirModalEvaluacion();
-        }
-
-        document.getElementById('formEvaluacion').addEventListener('submit', function (e) {
-          e.preventDefault()
-
-          let masterFormData = new FormData(this)
-
-          let pacienteFormData = new FormData(document.getElementById('formPaciente'))
-
-          for (let [key, value] of pacienteFormData.entries()) {
-            if (key !== 'csrfmiddlewaretoken') { 
-              masterFormData.append(key, value);
-            }
-          }
-        
-          // Apunta a la nueva vista unificada
-          fetch('/evaluaciones/crear-completo/', {
-            method: 'POST',
-            body: masterFormData,
-            headers: { 'X-CSRFToken': getCookie('csrftoken') }
-          })
-            .then((r) => {
-              if (!r.ok) throw new Error('Error de red');
-              return r.json();
-            })
-            .then((data) => {
-              if (data.success) {
-                mostrarNovyraToast()
-
-                setTimeout(() => {
-                  location.reload()
-                }, 1800)
-              } else {
-                alert('Error al guardar: ' + (data.error || 'Por favor verifique los datos.'));
-              }
-            })
-            .catch((error) => {
-
-              alert('Falla en la conexión debido a la mala señal. Espere un momento e intente presionar "Guardar evaluación" nuevamente.');
-            });
-        })
-        
-        function getCookie(name) {
-          let cookieValue = null
-        
-          if (document.cookie) {
-            document.cookie.split(';').forEach((cookie) => {
-              cookie = cookie.trim()
-        
-              if (cookie.startsWith(name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1))
-              }
-            })
-          }
-        
-          return cookieValue
-        }
-        
-        function formatearRutInput(input) {
-          input.addEventListener('input', function () {
-            let valor = this.value.replace(/[^0-9kK]/g, '').toUpperCase()
-        
-            if (valor.length <= 1) {
-              this.value = valor
-              return
-            }
-        
-            let cuerpo = valor.slice(0, -1)
-            let dv = valor.slice(-1)
-        
-            cuerpo = cuerpo
-              .split('')
-              .reverse()
-              .join('')
-              .match(/.{1,3}/g)
-              .join('.')
-              .split('')
-              .reverse()
-              .join('')
-        
-            this.value = cuerpo + '-' + dv
-          })
-        }
-        
-        const rutPaciente = document.getElementById('rut_input')
-        const rutBusqueda = document.getElementById('rut_busqueda')
-        
-        if (rutPaciente) formatearRutInput(rutPaciente)
-        if (rutBusqueda) formatearRutInput(rutBusqueda)
-        
-        let pacienteEliminarId = null
-        
-        const modalEliminar = document.getElementById('modalEliminar')
-        const textoEliminar = document.getElementById('textoEliminar')
-        
-        function abrirModalEliminar(id, nombre) {
-          pacienteEliminarId = id
-        
-          textoEliminar.innerHTML = '¿Seguro que deseas eliminar al paciente <b>' + nombre + '</b> ?<br><br>Esta acción no se puede deshacer.'
-        
-          modalEliminar.style.display = 'flex'
-        }
-        
-        function cerrarModalEliminar() {
-          modalEliminar.style.display = 'none'
-        }
-        
-        function confirmarEliminar() {
-          fetch(`/pacientes/eliminar/${pacienteEliminarId}/`, {
-            method: 'POST',
-            headers: {
-              'X-CSRFToken': getCookie('csrftoken')
-            }
-          })
-            .then((r) => r.json())
-            .then((data) => {
-              if (data.success) {
-                location.reload()
-              } else {
-                alert('Error al eliminar')
-              }
-            })
-        }
-        
-        function imprimirRecetas() {
-          const nombre = document.querySelector("input[name='nombre']").value
-          const rut = document.querySelector("input[name='rut']").value
-          const institucion = document.querySelector("input[name='institucion']").value
-        
-          let url = `/recetas/imprimir/?nombre=${nombre}&rut=${rut}&institucion=${institucion}`
-        
-          window.open(url, '_blank')
-        }
-
-        function mostrarNovyraToast() {
-          const toast = document.getElementById('novyraToast')
-
-          toast.classList.add('show')
 
           setTimeout(() => {
-            toast.classList.remove('show')
-          }, 1600)
+            location.reload();
+          }, 1800);
+        } else {
+          alert('Error al guardar: ' + (data.error || 'Por favor verifique los datos.'));
         }
-        
-      </script>
+      })
+      .catch((error) => {
+        alert('Falla en la conexión debido a la mala señal. Espere un momento e intente presionar "Guardar evaluación" nuevamente.');
+      });
+  })
+
+  function getCookie(name) {
+    let cookieValue = null
+
+    if (document.cookie) {
+      document.cookie.split(';').forEach((cookie) => {
+        cookie = cookie.trim()
+
+        if (cookie.startsWith(name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1))
+        }
+      })
+    }
+
+    return cookieValue
+  }
+
+  function formatearRutInput(input) {
+    input.addEventListener('input', function () {
+      let valor = this.value.replace(/[^0-9kK]/g, '').toUpperCase()
+
+      if (valor.length <= 1) {
+        this.value = valor
+        return
+      }
+
+      let cuerpo = valor.slice(0, -1)
+      let dv = valor.slice(-1)
+
+      cuerpo = cuerpo
+        .split('')
+        .reverse()
+        .join('')
+        .match(/.{1,3}/g)
+        .join('.')
+        .split('')
+        .reverse()
+        .join('')
+
+      this.value = cuerpo + '-' + dv
+    })
+  }
+
+  const rutPaciente = document.getElementById('rut_input')
+  const rutBusqueda = document.getElementById('rut_busqueda')
+
+  if (rutPaciente) formatearRutInput(rutPaciente)
+  if (rutBusqueda) formatearRutInput(rutBusqueda)
+
+  let pacienteEliminarId = null
+
+  const modalEliminar = document.getElementById('modalEliminar')
+  const textoEliminar = document.getElementById('textoEliminar')
+
+  function abrirModalEliminar(id, nombre) {
+    pacienteEliminarId = id
+
+    textoEliminar.innerHTML = '¿Seguro que deseas eliminar al paciente <b>' + nombre + '</b> ?<br><br>Esta acción no se puede deshacer.'
+
+    modalEliminar.style.display = 'flex'
+  }
+
+  function cerrarModalEliminar() {
+    modalEliminar.style.display = 'none'
+  }
+
+  function confirmarEliminar() {
+    fetch(`/pacientes/eliminar/${pacienteEliminarId}/`, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken')
+      }
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success) {
+          location.reload()
+        } else {
+          alert('Error al eliminar')
+        }
+      })
+  }
+
+  function imprimirRecetas() {
+    const nombre = document.querySelector("input[name='nombre']").value
+    const rut = document.querySelector("input[name='rut']").value
+    const institucion = document.querySelector("input[name='institucion']").value
+
+    let url = `/recetas/imprimir/?nombre=${nombre}&rut=${rut}&institucion=${institucion}`
+
+    window.open(url, '_blank')
+  }
+
+  function mostrarNovyraToast() {
+    const toast = document.getElementById('novyraToast')
+
+    toast.classList.add('show')
+
+    setTimeout(() => {
+      toast.classList.remove('show')
+    }, 1600)
+  }
+</script>
 
 
     </div>

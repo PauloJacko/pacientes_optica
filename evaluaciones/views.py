@@ -8,11 +8,9 @@ from .models import Evaluacion
 from django.db import transaction
 from usuarios.forms import PacienteForm
 
-
 @login_required
 @require_POST
 def crear_atencion_completa(request):
-
     paciente_form = PacienteForm(request.POST)
     evaluacion_form = EvaluacionForm(request.POST)
 
@@ -22,12 +20,13 @@ def crear_atencion_completa(request):
                 nuevo_paciente = paciente_form.save()
 
                 nueva_evaluacion = evaluacion_form.save(commit=False)
-
                 nueva_evaluacion.paciente = nuevo_paciente
-
                 nueva_evaluacion.save()
 
-            return JsonResponse({'success': True})
+            return JsonResponse({
+                'success': True,
+                'evaluacion_id': nueva_evaluacion.id
+            })
             
         except Exception as e:
             return JsonResponse({
