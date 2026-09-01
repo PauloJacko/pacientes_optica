@@ -1,13 +1,10 @@
 {% load static %}
 <!DOCTYPE html>
-
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>Login - Óptica Nexo</title>
-
     <link rel="stylesheet" href="{% static 'css/login.css' %}" />
   </head>
 
@@ -21,12 +18,24 @@
         <div class="error-message">{{ error }}</div>
       {% endif %}
 
-      <form method="post">
+      <form method="post" autocomplete="off">
         {% csrf_token %}
 
-        <input type="text" name="username" placeholder="Usuario" required />
+        <input 
+          type="text" 
+          name="username" 
+          placeholder="Usuario" 
+          required 
+          autofocus 
+          maxlength="150"
+        />
 
-        <input type="password" name="password" placeholder="Contraseña" required />
+        <input 
+          type="password" 
+          name="password" 
+          placeholder="Contraseña" 
+          required 
+        />
 
         <button type="submit">Ingresar</button>
       </form>

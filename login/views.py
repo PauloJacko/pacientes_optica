@@ -17,22 +17,36 @@ from django.db.models.functions import ExtractMonth
 from collections import defaultdict
 from datetime import timedelta
 
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_protect
+from django_ratelimit.decorators import ratelimit
+
+@csrf_protect
+@require_http_methods(["GET", "POST"])
+@ratelimit(key='ip', rate='5/m', method='POST', block=False)
 def login_view(request):
+    if getattr(request, 'limited', False):
+        return render(request, 'login/login.html', {
+            'error': 'Has superado el límite de intentos. Por seguridad, espera 1 minuto antes de volver a intentar.'
+        }, status=429)
 
     if request.method == 'POST':
-
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.POST.get('username', '').strip()
+        password = request.POST.get('password', '')
 
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
-
-            auth_login(request, user)
-            return redirect('dashboard')
-
+            if user.is_active:
+                request.session.cycle_key()
+                auth_login(request, user)
+                request.session.set_expiry(0)
+                return redirect('dashboard')
+            else:
+                return render(request, 'login/login.html', {
+                    'error': 'Esta cuenta ha sido desactivada.'
+                })
         else:
-
             return render(request, 'login/login.html', {
                 'error': 'Credenciales inválidas'
             })

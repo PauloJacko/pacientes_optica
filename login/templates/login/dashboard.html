@@ -8,6 +8,8 @@
     <title>Dashboard - Óptica</title>
 
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
   </head>
 
   <body>
@@ -258,37 +260,9 @@
         </div>
       </div>
 
-      <!-- MODAL ELIMINAR -->
 
-      <div id="modalEliminar" class="modal">
-        <div class="modal-content" style="max-width:420px">
-          <div class="modal-header">
-            <h2>Eliminar paciente</h2>
-            <span class="modal-close" onclick="cerrarModalEliminar()">✕</span>
-          </div>
 
-          <div class="modal-body">
-            <p id="textoEliminar" style="margin-bottom:20px"></p>
-
-            <div style="display:flex; gap:10px">
-              <button type="button" onclick="confirmarEliminar()" class="btn-confirmar1">Eliminar</button>
-
-              <button type="button" onclick="cerrarModalEliminar()" class="btn-cancelar1">Cancelar</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div id="novyraToast" class="novyra-toast">
-        <div class="novyra-toast-icon">✓</div>
-
-        <div class="novyra-toast-content">
-          <span class="novyra-toast-title">Paciente guardado</span>
-          <span class="novyra-toast-text">
-            La evaluación fue registrada correctamente.
-          </span>
-        </div>
-      </div>
+<script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 
 <script>
   let pacienteId = null
@@ -416,37 +390,36 @@
 
   let pacienteEliminarId = null
 
-  const modalEliminar = document.getElementById('modalEliminar')
-  const textoEliminar = document.getElementById('textoEliminar')
-
-  function abrirModalEliminar(id, nombre) {
-    pacienteEliminarId = id
-
-    textoEliminar.innerHTML = '¿Seguro que deseas eliminar al paciente <b>' + nombre + '</b> ?<br><br>Esta acción no se puede deshacer.'
-
-    modalEliminar.style.display = 'flex'
-  }
-
-  function cerrarModalEliminar() {
-    modalEliminar.style.display = 'none'
-  }
-
-  function confirmarEliminar() {
-    fetch(`/pacientes/eliminar/${pacienteEliminarId}/`, {
-      method: 'POST',
-      headers: {
-        'X-CSRFToken': getCookie('csrftoken')
-      }
-    })
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.success) {
-          location.reload()
-        } else {
-          alert('Error al eliminar')
+function abrirModalEliminar(id, nombre) {
+  alertify.confirm(
+    'Eliminar paciente',
+    '¿Estás seguro de que deseas eliminar a <b>' + nombre + '</b>?<br><br><small style="color:#d9534f;">Esta acción es permanente y no se puede deshacer.</small>',
+    function() {
+      fetch(`/pacientes/eliminar/${id}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken')
         }
       })
-  }
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          alertify.success('Paciente eliminado correctamente');
+          setTimeout(() => location.reload(), 800);
+        } else {
+          alertify.error('Error al eliminar paciente');
+        }
+      })
+      .catch(() => alertify.error('Error de conexión con el servidor'));
+    },
+    function() {
+      alertify.message('Operación cancelada');
+    }
+  ).set({
+    labels: { ok: 'Sí, eliminar', cancel: 'Cancelar' },
+    reverseButtons: true
+  });
+}
 
   function imprimirRecetas() {
     const nombre = document.querySelector("input[name='nombre']").value
