@@ -1,5 +1,28 @@
+# Entorno virtual y Python
 venv/
+.venv/
+env/
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+
+# Base de datos local
 db.sqlite3
+*.sqlite3
+
+# Archivos de configuración sensible
 .env
+
+# Archivos de Django y compilaciones estáticas
+staticfiles/
+*.log
+
+# IDEs y Editores de código
+.vscode/
+.idea/
+*.swp
+
+# Sistema Operativo
+.DS_Store
+Thumbs.db
