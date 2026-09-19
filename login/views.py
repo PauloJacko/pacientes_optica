@@ -88,10 +88,6 @@ def dashboard(request):
     paciente_form = PacienteForm()
     evaluacion_form = EvaluacionForm()
 
-    # -----------------------------
-    # MÉTRICAS PARA DASHBOARD EMPRESA
-    # -----------------------------
-
     mes_actual = now().month
     anio_actual = now().year
 
@@ -110,9 +106,6 @@ def dashboard(request):
         fecha_creacion__year=anio_actual
     ).values('institucion').exclude(institucion__isnull=True).exclude(institucion="").distinct().count()
 
-    # -----------------------------
-    # ENVÍO DE DATOS AL TEMPLATE
-    # -----------------------------
 
     return render(request, 'login/dashboard.html', {
         'pacientes': pacientes,
@@ -188,9 +181,8 @@ def dashboard_empresa(request):
     anio_seleccionado = request.GET.get('anio')
     anio_actual = int(anio_seleccionado) if anio_seleccionado else now().year
     
-    # -------------------------
     # MÉTRICAS GENERALES
-    # -------------------------
+
     pacientes_mes = Paciente.objects.filter(
         fecha_creacion__year=now().year,
         fecha_creacion__month=now().month
@@ -207,9 +199,6 @@ def dashboard_empresa(request):
     if total_pacientes_historicos > 0:
         tasa_recetas = round((evaluaciones_total / total_pacientes_historicos) * 100, 1)
 
-    # -------------------------
-    # NUEVO: TOP 5 INSTITUCIONES MÁS GRANDES (Del año seleccionado)
-    # -------------------------
     top_instituciones_qs = (
         Paciente.objects.filter(fecha_creacion__year=anio_actual)
         .values('institucion')
@@ -223,10 +212,8 @@ def dashboard_empresa(request):
     total_pac_anio = Paciente.objects.filter(fecha_creacion__year=anio_actual).count()
     promedio_por_operativo = round(total_pac_anio / total_inst_anio, 1) if total_inst_anio > 0 else 0
 
-
-    # -------------------------
     # DISTRIBUCIÓN DE PATOLOGÍAS 
-    # -------------------------
+
     evaluaciones_anio = Evaluacion.objects.filter(fecha__year=anio_actual)
 
     presbicia_count = evaluaciones_anio.exclude(cerca_od_esf="").exclude(cerca_od_esf__isnull=True).count()
@@ -252,9 +239,8 @@ def dashboard_empresa(request):
         "Presbicia (Lectura)": presbicia_count
     }
 
-    # -------------------------
-    # PACIENTES POR MES (Tu código existente corregido por año dinámico)
-    # -------------------------
+    # PACIENTES POR MES 
+
     pacientes_activos = Paciente.objects.filter(fecha_creacion__gte=now() - timedelta(days=30)).count()
     
     pacientes_por_mes_qs = (
@@ -269,9 +255,8 @@ def dashboard_empresa(request):
     for item in pacientes_por_mes_qs:
         pacientes_por_mes[item['mes'] - 1] = item['total']
 
-    # -------------------------
     # INSTITUCIONES POR MES
-    # -------------------------
+
     pacientes_del_anio = Paciente.objects.filter(fecha_creacion__year=anio_actual)
     instituciones_por_mes_dict = defaultdict(set)
     for p in pacientes_del_anio:
@@ -284,9 +269,8 @@ def dashboard_empresa(request):
     for mes, instituciones in instituciones_por_mes_dict.items():
         instituciones_por_mes[mes - 1] = len(instituciones)
 
-    # -------------------------
     # DETALLE PARA MODALES
-    # -------------------------
+
     detalle_meses = {}
     for mes in range(1, 13):
         pacientes_mes_qs = Paciente.objects.filter(
@@ -308,9 +292,8 @@ def dashboard_empresa(request):
             })
         detalle_meses[mes] = list(instituciones_dict.values())
 
-    # -------------------------
     # PACIENTES POR REGIÓN
-    # -------------------------
+
     pacientes_region_qs = Paciente.objects.values('region').annotate(total=Count('id')).order_by('-total')
     pacientes_por_region = []
     for r in pacientes_region_qs:
@@ -318,10 +301,9 @@ def dashboard_empresa(request):
             "region": dict(Paciente.REGION_CHOICES).get(r['region'], r['region']),
             "total": r['total']
         })
-    
-    # -------------------------
+
     # CRECIMIENTO MENSUAL
-    # -------------------------
+
     hoy = now()
     inicio_mes_actual = hoy.replace(day=1)
     fin_mes_actual = hoy
@@ -337,6 +319,7 @@ def dashboard_empresa(request):
         crecimiento = 100 if pacientes_mes_actual > 0 else 0
 
     # Años disponibles para el filtro del frontend
+
     anios_disponibles = Paciente.objects.dates('fecha_creacion', 'year', order='DESC')
     anios = [a.year for a in anios_disponibles] if anios_disponibles else [now().year]
 

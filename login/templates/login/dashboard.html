@@ -90,25 +90,24 @@
         </tbody>
       </table>
 
-      <!-- PAGINACION -->
+<!-- PAGINACION -->
+<div class="paginacion">
+  {% if pacientes.has_previous %}
+    <a class="page-btn" href="?page={{ pacientes.previous_page_number }}&nombre={{ request.GET.nombre }}&rut={{ request.GET.rut }}&institucion={{ request.GET.institucion }}&fecha_desde={{ request.GET.fecha_desde }}&fecha_hasta={{ request.GET.fecha_hasta }}">‹</a>
+  {% endif %}
 
-      <div class="paginacion">
-        {% if pacientes.has_previous %}
-          <a class="page-btn" href="?page={{ pacientes.previous_page_number }}&nombre={{ request.GET.nombre }}&rut={{ request.GET.rut }}&institucion={{ request.GET.institucion }}">‹</a>
-        {% endif %}
+  {% for num in pacientes.paginator.page_range %}
+    {% if pacientes.number == num %}
+      <span class="page-number active">{{ num }}</span>
+    {% elif num > pacientes.number|add:'-3' and num < pacientes.number|add:'3' %}
+      <a class="page-number" href="?page={{ num }}&nombre={{ request.GET.nombre }}&rut={{ request.GET.rut }}&institucion={{ request.GET.institucion }}&fecha_desde={{ request.GET.fecha_desde }}&fecha_hasta={{ request.GET.fecha_hasta }}">{{ num }}</a>
+    {% endif %}
+  {% endfor %}
 
-        {% for num in pacientes.paginator.page_range %}
-          {% if pacientes.number == num %}
-            <span class="page-number active">{{ num }}</span>
-          {% elif num > pacientes.number|add:'-3' and num < pacientes.number|add:'3' %}
-            <a class="page-number" href="?page={{ num }}&nombre={{ request.GET.nombre }}&rut={{ request.GET.rut }}&institucion={{ request.GET.institucion }}">{{ num }}</a>
-          {% endif %}
-        {% endfor %}
-
-        {% if pacientes.has_next %}
-          <a class="page-btn" href="?page={{ pacientes.next_page_number }}&nombre={{ request.GET.nombre }}&rut={{ request.GET.rut }}&institucion={{ request.GET.institucion }}">›</a>
-        {% endif %}
-      </div>
+  {% if pacientes.has_next %}
+    <a class="page-btn" href="?page={{ pacientes.next_page_number }}&nombre={{ request.GET.nombre }}&rut={{ request.GET.rut }}&institucion={{ request.GET.institucion }}&fecha_desde={{ request.GET.fecha_desde }}&fecha_hasta={{ request.GET.fecha_hasta }}">›</a>
+  {% endif %}
+</div>
 
 <!-- MODAL PACIENTE -->
 <div id="modalPaciente" class="modal">
