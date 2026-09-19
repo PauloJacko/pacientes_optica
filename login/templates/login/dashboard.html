@@ -420,16 +420,18 @@ function abrirModalEliminar(id, nombre) {
   });
 }
 
-  function imprimirRecetas() {
-    const nombre = document.querySelector("input[name='nombre']").value
-    const rut = document.querySelector("input[name='rut']").value
-    const institucion = document.querySelector("input[name='institucion']").value
+function imprimirRecetas() {
+  const nombre = document.querySelector("input[name='nombre']").value
+  const rut = document.querySelector("input[name='rut']").value
+  const institucion = document.querySelector("input[name='institucion']").value
 
-    let url = `/recetas/imprimir/?nombre=${nombre}&rut=${rut}&institucion=${institucion}`
+  const fechaDesde = document.querySelector("input[name='fecha_desde']").value
+  const fechaHasta = document.querySelector("input[name='fecha_hasta']").value
 
-    window.open(url, '_blank')
-  }
+  let url = `/recetas/imprimir/?nombre=${nombre}&rut=${rut}&institucion=${institucion}&fecha_desde=${fechaDesde}&fecha_hasta=${fechaHasta}`
 
+  window.open(url, '_blank')
+}
   function mostrarNovyraToast() {
     const toast = document.getElementById('novyraToast')
 

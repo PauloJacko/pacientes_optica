@@ -140,12 +140,15 @@ def eliminar_paciente(request, id):
 
 @login_required
 def imprimir_recetas(request):
-
-    pacientes = Paciente.objects.all()
+    pacientes = Paciente.objects.all().order_by('-fecha_creacion')
 
     nombre = request.GET.get('nombre')
     rut = request.GET.get('rut')
     institucion = request.GET.get('institucion')
+    
+    # Recibimos las fechas desde los parámetros GET
+    fecha_desde = request.GET.get('fecha_desde')
+    fecha_hasta = request.GET.get('fecha_hasta')
 
     if nombre:
         pacientes = pacientes.filter(nombre__icontains=nombre)
@@ -156,16 +159,20 @@ def imprimir_recetas(request):
     if institucion:
         pacientes = pacientes.filter(institucion__icontains=institucion)
 
+    if fecha_desde:
+        pacientes = pacientes.filter(fecha_creacion__date__gte=fecha_desde)
+        
+    if fecha_hasta:
+        pacientes = pacientes.filter(fecha_creacion__date__lte=fecha_hasta)
+
     recetas = []
 
     for paciente in pacientes:
-
         evaluacion = Evaluacion.objects.filter(
             paciente=paciente
         ).order_by('-fecha').first()
 
         if evaluacion:
-
             recetas.append({
                 "paciente": paciente,
                 "evaluacion": evaluacion
